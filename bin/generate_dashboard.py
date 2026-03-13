@@ -2,6 +2,7 @@
 """Parse skill-card markdown files and generate a static dashboard site."""
 
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -141,108 +142,184 @@ def generate_detail_slug(skill: dict) -> str:
     return skill.get("slug", skill["name"].lower().replace(" ", "-").replace("/", "-"))
 
 
+def html_escape(s: str) -> str:
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+# Pentagon radar chart dimensions
+RADAR_DIMS = ["structure", "specificity", "examples", "scope", "actionability"]
+RADAR_LABELS = ["Struct", "Spec", "Exam", "Scope", "Action"]
+RADAR_CX, RADAR_CY, RADAR_R = 50, 50, 38
+RADAR_LABEL_R = 46
+
+
+def _pentagon_point(i: int, r: float, cx: float = RADAR_CX, cy: float = RADAR_CY) -> tuple[float, float]:
+    angle = -math.pi / 2 + 2 * math.pi * i / 5
+    return cx + r * math.cos(angle), cy + r * math.sin(angle)
+
+
+def _pentagon_points_str(r: float) -> str:
+    return " ".join(f"{x:.1f},{y:.1f}" for x, y in (_pentagon_point(i, r) for i in range(5)))
+
+
+def build_radar_svg(breakdown: dict) -> str:
+    """Build a pentagon radar chart SVG for 5 evaluation dimensions."""
+    # Grid rings at 50% and 100%
+    grid = f'<polygon points="{_pentagon_points_str(RADAR_R)}" class="radar-grid"/>'
+    grid += f'<polygon points="{_pentagon_points_str(RADAR_R * 0.5)}" class="radar-grid"/>'
+
+    # Axes
+    axes = ""
+    for i in range(5):
+        px, py = _pentagon_point(i, RADAR_R)
+        axes += f'<line x1="{RADAR_CX}" y1="{RADAR_CY}" x2="{px:.1f}" y2="{py:.1f}" class="radar-axis"/>'
+
+    # Data polygon
+    data_points = []
+    dots = ""
+    for i, dim in enumerate(RADAR_DIMS):
+        bd = breakdown.get(dim, {"score": 0, "max": 2})
+        pct = bd["score"] / bd["max"] if bd["max"] else 0
+        r = max(pct * RADAR_R, 2)
+        px, py = _pentagon_point(i, r)
+        data_points.append(f"{px:.1f},{py:.1f}")
+        dots += f'<circle cx="{px:.1f}" cy="{py:.1f}" class="radar-dot"/>'
+
+    fill = f'<polygon points="{" ".join(data_points)}" class="radar-fill"/>'
+
+    # Labels
+    labels = ""
+    for i, label in enumerate(RADAR_LABELS):
+        lx, ly = _pentagon_point(i, RADAR_LABEL_R)
+        labels += f'<text x="{lx:.1f}" y="{ly:.1f}" class="radar-label">{label}</text>'
+
+    return f'''<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        {grid}{axes}{fill}{dots}{labels}
+    </svg>'''
+
+
 def build_card_html(skill: dict) -> str:
     slug = generate_detail_slug(skill)
     score = skill.get("score", 0)
     sc = score_color_class(score)
-    name = skill["name"]
+    name = html_escape(skill["name"])
     domain = skill.get("domain", "")
     eval_engine = skill.get("eval_engine", "")
-    eval_model = skill.get("eval_model", "")
     domain_display = domain if domain else eval_engine
+    skill_type = skill.get("type", "")
     verdict = skill.get("verdict", "")
     vc = verdict_badge_class(verdict)
+    desc = html_escape(skill.get("description", ""))
     downloads = skill.get("downloads", 0)
     if isinstance(downloads, str):
         downloads = int(downloads.replace(",", ""))
-    dl_str = f"{downloads:,} downloads" if downloads else eval_model
+    dl_str = f"{downloads:,}" if downloads else ""
 
-    # Top 3 breakdown scores for the card
     breakdown = skill.get("breakdown", {})
-    sorted_bd = sorted(breakdown.items(), key=lambda x: x[1]["score"], reverse=True)[:3]
+
+    # Bars for all dimensions
+    sorted_bd = sorted(breakdown.items(), key=lambda x: x[1]["score"], reverse=True)
     bars_html = ""
     for comp, bd in sorted_bd:
         pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
         score_display = f"{bd['score']:g}/{bd['max']:g}"
-        bars_html += f"""
-            <div class="bar-row">
+        bars_html += f'''<div class="bar-row">
                 <span class="bar-label">{comp}</span>
                 <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
                 <span class="bar-val">{score_display}</span>
-            </div>"""
+            </div>'''
+
+    # Radar chart
+    radar_svg = build_radar_svg(breakdown)
 
     flags_html = ""
     for f in skill.get("flags", []):
-        flags_html += f'<span class="tag">{f}</span>'
+        flags_html += f'<span class="tag">{html_escape(f)}</span>'
+    flags_html += f'<span class="tag tag-verdict tag-{vc}">{html_escape(verdict)}</span>'
 
-    return f"""
-    <div class="card" data-domain="{domain_display}" data-verdict="{vc}" data-score="{score}" data-name="{name.lower()}" data-downloads="{downloads}" onclick="location.href='detail/{slug}.html'">
+    meta_parts = []
+    if domain_display:
+        meta_parts.append(f'<span class="domain-chip">{html_escape(domain_display)}</span>')
+    if dl_str:
+        meta_parts.append(f'{dl_str} dl')
+    meta_html = '<span class="meta-sep">&middot;</span>'.join(meta_parts)
+
+    type_display = skill_type.replace("_", " ") if skill_type else ""
+
+    return f'''
+    <div class="card" data-sc="{sc}" data-domain="{html_escape(domain_display)}" data-verdict="{vc}" data-score="{score}" data-name="{name.lower()}" data-downloads="{downloads}" onclick="location.href='detail/{slug}.html'">
         <div class="card-header">
-            <div>
+            <div class="card-title-group">
                 <h3 class="card-title">{name}</h3>
-                <span class="card-meta">{domain_display} · {dl_str}</span>
+                <div class="card-meta">{meta_html}</div>
             </div>
-            <div class="score-circle score-{sc}">
-                <span class="score-num">{score}</span>
+            <div class="score-block" data-sc="{sc}">
+                <span class="score-num sc-{sc}">{score}</span>
                 <span class="score-den">/10</span>
             </div>
         </div>
-        <div class="card-bars">{bars_html}</div>
-        <div class="card-footer">
-            <div class="tags">{flags_html}<span class="tag tag-{vc}">{verdict}</span></div>
+        <p class="card-desc">{desc}</p>
+        <div class="card-body">
+            <div class="radar-wrap">{radar_svg}</div>
+            <div class="card-bars">{bars_html}</div>
         </div>
-    </div>"""
+        <div class="card-footer">
+            <div class="tags">{flags_html}</div>
+            <span class="card-type">{type_display}</span>
+        </div>
+    </div>'''
 
 
 def build_detail_html(skill: dict) -> str:
     slug = generate_detail_slug(skill)
     score = skill.get("score", 0)
     sc = score_color_class(score)
-    name = skill["name"]
-    domain = skill.get("domain", "unknown")
+    name = html_escape(skill["name"])
+    domain = html_escape(skill.get("domain", "unknown"))
+    skill_type = skill.get("type", "")
     verdict = skill.get("verdict", "")
     vc = verdict_badge_class(verdict)
-    desc = skill.get("description", "")
+    desc = html_escape(skill.get("description", ""))
     downloads = skill.get("downloads", 0)
     if isinstance(downloads, str):
         downloads = int(downloads.replace(",", ""))
     dl_str = f"{downloads:,}" if downloads else "—"
     eval_date = skill.get("eval_date", "")
-    eval_engine = skill.get("eval_engine", "")
-    source_url = skill.get("source_url", "#")
+    eval_engine = html_escape(skill.get("eval_engine", ""))
+    source_url = html_escape(skill.get("source_url", "#"))
 
     flags_html = ""
     for f in skill.get("flags", []):
-        flags_html += f'<span class="tag">{f}</span>'
-    flags_html += f'<span class="tag tag-{vc}">{verdict}</span>'
+        flags_html += f'<span class="tag">{html_escape(f)}</span>'
+    flags_html += f'<span class="tag tag-verdict tag-{vc}">{html_escape(verdict)}</span>'
 
-    # Full breakdown
     breakdown = skill.get("breakdown", {})
     bd_html = ""
     for comp, bd in sorted(breakdown.items()):
         pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
         score_display = f"{bd['score']:g}/{bd['max']:g}"
-        bd_html += f"""
+        bd_html += f'''
         <div class="detail-score-item">
             <span class="ds-label">{comp}</span>
             <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
             <span class="ds-val">{score_display}</span>
-        </div>"""
+        </div>'''
 
-    # Metrics
     metrics = skill.get("metrics", {})
     metrics_html = ""
     for k, v in metrics.items():
         label = k.replace("_", " ").title()
         if isinstance(v, bool):
             v = "Yes" if v else "No"
-        metrics_html += f"""
+        metrics_html += f'''
         <div class="metric-item">
             <span class="metric-label">{label}</span>
             <span class="metric-val">{v}</span>
-        </div>"""
+        </div>'''
 
-    return f"""<!DOCTYPE html>
+    type_display = skill_type.replace("_", " ").title() if skill_type else ""
+
+    return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -252,16 +329,21 @@ def build_detail_html(skill: dict) -> str:
 </head>
 <body>
 <div class="container detail-page">
-    <a href="../index.html" class="back-btn">← Back to list</a>
+    <a href="../index.html" class="back-btn">&larr; Back</a>
     <div class="detail-header-card">
         <div class="detail-info">
             <h1>{name}</h1>
-            <p class="detail-sub">{domain} · {eval_date} · {dl_str} downloads</p>
+            <div class="detail-sub">
+                <span class="detail-sub-item"><span class="domain-chip">{domain}</span></span>
+                <span class="detail-sub-item">{eval_date}</span>
+                <span class="detail-sub-item">{dl_str} downloads</span>
+                <span class="detail-sub-item">{type_display}</span>
+            </div>
             <p class="detail-desc">{desc}</p>
             <div class="tags">{flags_html}</div>
         </div>
-        <div class="score-circle score-circle-lg score-{sc}">
-            <span class="score-num">{score}</span>
+        <div class="score-block-lg" data-sc="{sc}">
+            <span class="score-num sc-{sc}">{score}</span>
             <span class="score-den">/10</span>
         </div>
     </div>
@@ -283,92 +365,146 @@ def build_detail_html(skill: dict) -> str:
     </section>
 </div>
 </body>
-</html>"""
+</html>'''
+
+
+def build_score_distribution(skills: list[dict]) -> str:
+    """Build SVG bars for score distribution (4.0 to 10.0, step 0.5)."""
+    from collections import defaultdict
+    buckets = defaultdict(int)
+    for s in skills:
+        sc = s.get("score", 0)
+        bucket = round(sc * 2) / 2  # snap to 0.5
+        buckets[bucket] += 1
+    max_count = max(buckets.values()) if buckets else 1
+    bars = ""
+    for i, v in enumerate(sorted(buckets.keys())):
+        h = max(buckets[v] / max_count * 22, 1)
+        sc = score_color_class(v)
+        color_map = {"high": "var(--sc-high)", "mid": "var(--sc-mid)", "low": "var(--sc-low)", "bad": "var(--sc-bad)"}
+        color = color_map.get(sc, "var(--sc-mid)")
+        bars += f'<div class="distrib-bar" style="height:{h:.0f}px;background:{color}" title="{v}: {buckets[v]}"></div>'
+    return bars
 
 
 def build_index_html(skills: list[dict], domains: list[str], verdicts: list[str]) -> str:
     total = len(skills)
     avg_score = sum(s["score"] for s in skills) / total if total else 0
     domain_count = len(domains)
-    total_downloads = sum(s.get("downloads", 0) if isinstance(s.get("downloads", 0), int) else int(str(s.get("downloads", 0)).replace(",", "")) for s in skills)
 
-    # Count verdicts
     verdict_counts = Counter(verdict_badge_class(s.get("verdict", "")) for s in skills)
-    recommended = verdict_counts.get("green", 0) + verdict_counts.get("blue", 0)
-    caution = verdict_counts.get("yellow", 0)
-    not_rec = verdict_counts.get("red", 0)
+    highly_rec = verdict_counts.get("green", 0)
+    recommended = verdict_counts.get("blue", 0)
+    conditional = verdict_counts.get("yellow", 0)
+    marginal = verdict_counts.get("red", 0)
 
     cards_html = "\n".join(build_card_html(s) for s in skills)
+    distrib_html = build_score_distribution(skills)
 
-    domain_btns = '<button class="filter-btn active" data-filter="all" data-group="domain">All Domains</button>'
+    domain_btns = '<button class="filter-btn active" data-filter="all" data-group="domain">All</button>'
     for d in sorted(domains):
         domain_btns += f'<button class="filter-btn" data-filter="{d}" data-group="domain">{d}</button>'
 
     verdict_btns = '<button class="filter-btn active" data-filter="all" data-group="verdict">All</button>'
-    for label, vc in [("Highly Rec.", "green"), ("Recommended", "blue"), ("Caution", "yellow"), ("Not Rec.", "red")]:
+    for label, vc in [("Highly Rec.", "green"), ("Recommended", "blue"), ("Conditional", "yellow"), ("Marginal", "red")]:
         verdict_btns += f'<button class="filter-btn" data-filter="{vc}" data-group="verdict">{label}</button>'
 
-    return f"""<!DOCTYPE html>
+    return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PandaEval — Skill Evaluation Dashboard</title>
+<title>PandaEval &mdash; Skill Evaluation Dashboard</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
     <header class="hero">
-        <div class="logo">🐼 PandaEval</div>
+        <div class="logo"><span class="logo-panda">&#x1f43c;</span>Panda<span class="logo-accent">Eval</span></div>
         <p class="tagline">Automated Skill Evaluation for AI Agents</p>
     </header>
 
     <div class="stats-bar">
-        <div class="stat"><span class="stat-num">{total}</span><span class="stat-label">Skills</span></div>
-        <div class="stat"><span class="stat-num">{recommended}</span><span class="stat-label">Recommended</span></div>
-        <div class="stat"><span class="stat-num">{caution}</span><span class="stat-label">Caution</span></div>
-        <div class="stat"><span class="stat-num">{not_rec}</span><span class="stat-label">Not Rec.</span></div>
-        <div class="stat"><span class="stat-num">{domain_count}</span><span class="stat-label">Domains</span></div>
-        <div class="stat"><span class="stat-num">{avg_score:.1f}</span><span class="stat-label">Avg Score</span></div>
+        <div class="stat">
+            <span class="stat-num">{total}</span>
+            <span class="stat-label">Skills</span>
+        </div>
+        <div class="stat">
+            <span class="stat-dot stat-dot-green"></span>
+            <span class="stat-num">{highly_rec}</span>
+            <span class="stat-label">Highly Rec.</span>
+        </div>
+        <div class="stat">
+            <span class="stat-dot stat-dot-blue"></span>
+            <span class="stat-num">{recommended}</span>
+            <span class="stat-label">Recommended</span>
+        </div>
+        <div class="stat">
+            <span class="stat-dot stat-dot-yellow"></span>
+            <span class="stat-num">{conditional}</span>
+            <span class="stat-label">Conditional</span>
+        </div>
+        <div class="stat">
+            <span class="stat-dot stat-dot-red"></span>
+            <span class="stat-num">{marginal}</span>
+            <span class="stat-label">Marginal</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{domain_count}</span>
+            <span class="stat-label">Domains</span>
+        </div>
+        <div class="distrib-wrap">
+            <div class="distrib-bars">{distrib_html}</div>
+            <div>
+                <span class="stat-num">{avg_score:.1f}</span>
+                <span class="stat-label">Avg</span>
+            </div>
+        </div>
     </div>
 
     <div class="toolbar">
         <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search" placeholder="Search skills, domains, flags...">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="text" id="search" placeholder="Search skills...">
+            <span class="results-count" id="results-count"></span>
+            <span class="search-hint">/</span>
         </div>
         <div class="filter-group">
             {verdict_btns}
         </div>
-        <div class="filter-group">
-            {domain_btns}
-        </div>
         <div class="sort-group">
             <select id="sort-select">
-                <option value="score-desc">Score ↓</option>
-                <option value="score-asc">Score ↑</option>
+                <option value="score-desc">Score &#x2193;</option>
+                <option value="score-asc">Score &#x2191;</option>
                 <option value="name-asc">Name A-Z</option>
                 <option value="name-desc">Name Z-A</option>
-                <option value="downloads-desc">Downloads ↓</option>
+                <option value="downloads-desc">Downloads &#x2193;</option>
             </select>
         </div>
         <div class="view-toggle">
-            <button class="view-btn active" data-view="grid" title="Grid view">▦</button>
-            <button class="view-btn" data-view="list" title="List view">☰</button>
+            <button class="view-btn active" data-view="grid" title="Grid view">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+            </button>
+            <button class="view-btn" data-view="list" title="List view">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="2.5" rx="1"/><rect x="1" y="6.75" width="14" height="2.5" rx="1"/><rect x="1" y="11.5" width="14" height="2.5" rx="1"/></svg>
+            </button>
         </div>
     </div>
+
+    <div class="domain-row">{domain_btns}</div>
 
     <div class="cards-grid" id="cards-container">
         {cards_html}
     </div>
 
     <footer class="footer">
-        PandaEval — Generated from {total} skill evaluations
+        <div class="footer-line"></div>
+        PandaEval v0.5.0 &middot; {total} skill evaluations &middot; {domain_count} domains
     </footer>
 </div>
 <script src="app.js"></script>
 </body>
-</html>"""
+</html>'''
 
 
 def main():
