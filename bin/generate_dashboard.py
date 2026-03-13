@@ -147,9 +147,9 @@ def build_score_ring(score, max_val=10, size=48, sw=3.5):
     dash = circ * pct
     gap = circ - dash
     sc = sc_class(score)
-    colors = {"high": "#34d399", "mid": "#fbbf24", "low": "#f87171", "bad": "#f87171"}
+    colors = {"high": "var(--green)", "mid": "var(--yellow)", "low": "var(--red)", "bad": "var(--red)"}
     color = colors[sc]
-    trail_color = "rgba(255,255,255,0.04)"
+    trail_color = "var(--ring-trail)"
     return (
         f'<div class="score-ring">'
         f'<svg class="score-ring-svg" width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
@@ -358,6 +358,10 @@ def build_detail_html(skill: dict) -> str:
 </head>
 <body>
 <div class="container detail-page">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
     <a href="../index.html" class="back-btn">&larr; Back</a>
 
     <div class="detail-header">
@@ -399,6 +403,7 @@ def build_detail_html(skill: dict) -> str:
         <p class="eval-engine">{eval_engine}</p>
     </section>
 </div>
+<script src="../app.js"></script>
 </body>
 </html>'''
 
@@ -445,6 +450,11 @@ def build_index_html(skills, domains, verdicts):
 <div class="container">
 
     <div class="ambient-glow"></div>
+
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
 
     <div class="header">
         <div class="logo">

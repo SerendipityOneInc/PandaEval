@@ -1,6 +1,46 @@
 // PandaEval Dashboard v4
 (function () {
+    // ─── Theme ───
+    const themeToggle = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+
+    function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+    }
+
+    // Init: use saved preference, or follow system
+    const saved = localStorage.getItem('panda-theme');
+    if (saved) {
+        applyTheme(saved);
+    } else {
+        applyTheme(getSystemTheme());
+    }
+
+    // Listen for system changes (only if user hasn't manually overridden)
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('panda-theme')) {
+            applyTheme(e.matches ? 'light' : 'dark');
+        }
+    });
+
+    // Toggle button
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const current = root.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            localStorage.setItem('panda-theme', next);
+        });
+    }
+
+    // ─── Dashboard ───
     const container = document.getElementById('cards-container');
+    if (!container) return; // detail pages don't have cards
+
     const searchInput = document.getElementById('search');
     const sortSelect = document.getElementById('sort-select');
     const countEl = document.getElementById('results-count');
