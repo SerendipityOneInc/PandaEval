@@ -5,7 +5,7 @@ PandaEval is a self-evolving evaluation engine that blind-tests AI agent skills 
 <p align="center">
   <a href="#evaluate-your-own-skills">Quick Start</a> &bull;
   <a href="methodology/SKILL-EVAL.md">Methodology</a> &bull;
-  <a href="results/leaderboard/index.html">Leaderboard</a> &bull;
+  <a href="https://pandaclaw.ai/eval">Leaderboard</a> &bull;
   <a href="paper/PandaEval.pdf">Paper</a> &bull;
   <a href="knowledge/">Knowledge Base</a>
 </p>
