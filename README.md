@@ -157,7 +157,7 @@ PandaEval/
 │       └── failures.md              # What NOT to try
 ├── results/
 │   ├── leaderboard/index.html       # Interactive HTML leaderboard
-│   └── skill-cards/                 # 446 individual eval reports
+│   └── skill-cards/                 # 415 individual eval reports
 └── scripts/                         # Card & leaderboard generators
     ├── generate_skill_card.py
     ├── generate_leaderboard.py
