@@ -163,11 +163,12 @@ def build_card_html(skill: dict) -> str:
     bars_html = ""
     for comp, bd in sorted_bd:
         pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
+        score_display = f"{bd['score']:g}/{bd['max']:g}"
         bars_html += f"""
             <div class="bar-row">
                 <span class="bar-label">{comp}</span>
                 <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
-                <span class="bar-val">{bd['score']}</span>
+                <span class="bar-val">{score_display}</span>
             </div>"""
 
     flags_html = ""
@@ -220,11 +221,12 @@ def build_detail_html(skill: dict) -> str:
     bd_html = ""
     for comp, bd in sorted(breakdown.items()):
         pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
+        score_display = f"{bd['score']:g}/{bd['max']:g}"
         bd_html += f"""
         <div class="detail-score-item">
             <span class="ds-label">{comp}</span>
             <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
-            <span class="ds-val">{bd['score']}</span>
+            <span class="ds-val">{score_display}</span>
         </div>"""
 
     # Metrics
@@ -379,6 +381,9 @@ def main():
     skipped = 0
     for f in md_files:
         if f.name == "TEMPLATE.md":
+            continue
+        if "-v0.3.0.md" in f.name:
+            skipped += 1
             continue
         s = parse_skill_card(str(f))
         if s:
