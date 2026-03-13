@@ -7,8 +7,9 @@ import re
 from pathlib import Path
 from collections import Counter
 
-CARDS_DIR = Path(__file__).parent.parent / "results" / "skill-cards"
-DOCS_DIR = Path(__file__).parent.parent / "docs"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+CARDS_DIR = ROOT_DIR / "results" / "skill-cards"
+DOCS_DIR = ROOT_DIR / "docs"
 
 
 def parse_skill_card(filepath: str) -> dict | None:
@@ -27,10 +28,13 @@ def parse_skill_card(filepath: str) -> dict | None:
         except json.JSONDecodeError:
             pass
 
-    # Extract name from title
-    name_match = re.match(r"# Skill Card: (.+)", text)
-    if name_match:
-        data.setdefault("name", name_match.group(1).strip())
+    # Extract name from title (skip DEPENDENCY-GATED headers, use last real name)
+    name_matches = re.findall(r"^# Skill Card: (.+)$", text, re.MULTILINE)
+    for nm in name_matches:
+        nm = nm.strip()
+        if "DEPENDENCY-GATED" not in nm and "{skill_name}" not in nm:
+            data.setdefault("name", nm)
+            break
 
     # Extract description
     desc_match = re.search(r"^> (.+)$", text, re.MULTILINE)
@@ -43,12 +47,13 @@ def parse_skill_card(filepath: str) -> dict | None:
         ("Type", "type"),
         ("Eval Date", "eval_date"),
         ("Eval Engine", "eval_engine"),
+        ("Eval Model", "eval_model"),
         ("Downloads", "downloads"),
         ("Source", "source_url"),
     ]:
         m = re.search(rf"\*\*{field}\*\*\s*\|\s*(.+)", text)
         if m:
-            val = m.group(1).strip()
+            val = m.group(1).strip().rstrip("|").strip()
             if key == "source_url":
                 link = re.search(r"\[.*?\]\((.*?)\)", val)
                 if link:
@@ -73,16 +78,19 @@ def parse_skill_card(filepath: str) -> dict | None:
         flags_raw = flags_match.group(1).strip()
         data.setdefault("flags", [f.strip().strip("`") for f in flags_raw.split(",") if f.strip()])
 
-    # Extract score breakdown
+    # Extract score breakdown (score and max)
     breakdown = {}
     for row in re.finditer(
-        r"\|\s*(\w[\w\s]*?)\s*\|\s*([\d.]+)\s*\|\s*(\d+)\s*\|",
+        r"\|\s*(\w[\w\s-]*?)\s*\|\s*([\d.]+)\s*\|\s*(\d+)\s*\|",
         text,
     ):
         component = row.group(1).strip()
         if component.lower() in ("total", "**total**", "component"):
             continue
-        breakdown[component.lower()] = float(row.group(2))
+        breakdown[component.lower()] = {
+            "score": float(row.group(2)),
+            "max": float(row.group(3)),
+        }
     if breakdown:
         data["breakdown"] = breakdown
 
@@ -138,25 +146,29 @@ def build_card_html(skill: dict) -> str:
     score = skill.get("score", 0)
     sc = score_color_class(score)
     name = skill["name"]
-    domain = skill.get("domain", "unknown")
+    domain = skill.get("domain", "")
+    eval_engine = skill.get("eval_engine", "")
+    eval_model = skill.get("eval_model", "")
+    domain_display = domain if domain else eval_engine
     verdict = skill.get("verdict", "")
     vc = verdict_badge_class(verdict)
     downloads = skill.get("downloads", 0)
     if isinstance(downloads, str):
         downloads = int(downloads.replace(",", ""))
-    dl_str = f"{downloads:,}" if downloads else "—"
+    dl_str = f"{downloads:,} downloads" if downloads else eval_model
 
     # Top 3 breakdown scores for the card
     breakdown = skill.get("breakdown", {})
-    sorted_bd = sorted(breakdown.items(), key=lambda x: x[1], reverse=True)[:3]
+    sorted_bd = sorted(breakdown.items(), key=lambda x: x[1]["score"], reverse=True)[:3]
     bars_html = ""
-    for comp, val in sorted_bd:
-        pct = val / 2 * 100
+    for comp, bd in sorted_bd:
+        pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
+        score_display = f"{bd['score']:g}/{bd['max']:g}"
         bars_html += f"""
             <div class="bar-row">
                 <span class="bar-label">{comp}</span>
                 <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
-                <span class="bar-val">{val}</span>
+                <span class="bar-val">{score_display}</span>
             </div>"""
 
     flags_html = ""
@@ -164,11 +176,11 @@ def build_card_html(skill: dict) -> str:
         flags_html += f'<span class="tag">{f}</span>'
 
     return f"""
-    <div class="card" data-domain="{domain}" data-verdict="{vc}" data-score="{score}" data-name="{name.lower()}" data-downloads="{downloads}" onclick="location.href='detail/{slug}.html'">
+    <div class="card" data-domain="{domain_display}" data-verdict="{vc}" data-score="{score}" data-name="{name.lower()}" data-downloads="{downloads}" onclick="location.href='detail/{slug}.html'">
         <div class="card-header">
             <div>
                 <h3 class="card-title">{name}</h3>
-                <span class="card-meta">{domain} · {dl_str} downloads</span>
+                <span class="card-meta">{domain_display} · {dl_str}</span>
             </div>
             <div class="score-circle score-{sc}">
                 <span class="score-num">{score}</span>
@@ -207,13 +219,14 @@ def build_detail_html(skill: dict) -> str:
     # Full breakdown
     breakdown = skill.get("breakdown", {})
     bd_html = ""
-    for comp, val in sorted(breakdown.items()):
-        pct = val / 2 * 100
+    for comp, bd in sorted(breakdown.items()):
+        pct = bd["score"] / bd["max"] * 100 if bd["max"] else 0
+        score_display = f"{bd['score']:g}/{bd['max']:g}"
         bd_html += f"""
         <div class="detail-score-item">
             <span class="ds-label">{comp}</span>
             <div class="bar-track"><div class="bar-fill" style="width:{pct}%"></div></div>
-            <span class="ds-val">{val}</span>
+            <span class="ds-val">{score_display}</span>
         </div>"""
 
     # Metrics
@@ -360,13 +373,29 @@ def build_index_html(skills: list[dict], domains: list[str], verdicts: list[str]
 
 def main():
     cards_path = CARDS_DIR
+    print(f"Cards dir: {cards_path} (exists: {cards_path.exists()})")
+    md_files = sorted(cards_path.glob("*.md"))
+    print(f"Found {len(md_files)} .md files")
+
     skills = []
-    for f in sorted(cards_path.glob("*.md")):
+    skipped = 0
+    for f in md_files:
         if f.name == "TEMPLATE.md":
+            continue
+        if "-v0.3.0.md" in f.name:
+            skipped += 1
             continue
         s = parse_skill_card(str(f))
         if s:
             skills.append(s)
+        else:
+            skipped += 1
+
+    # Disambiguate duplicate names by appending slug
+    name_count = Counter(s.get("name", "") for s in skills)
+    for s in skills:
+        if name_count[s.get("name", "")] > 1 and s.get("slug"):
+            s["name"] = f"{s['name']} ({s['slug']})"
 
     skills.sort(key=lambda x: x.get("score", 0), reverse=True)
 
@@ -386,7 +415,7 @@ def main():
         detail_html = build_detail_html(s)
         (DOCS_DIR / "detail" / f"{slug}.html").write_text(detail_html, encoding="utf-8")
 
-    print(f"Generated dashboard: {len(skills)} skills, {len(domains)} domains")
+    print(f"Generated dashboard: {len(skills)} skills, {skipped} skipped, {len(domains)} domains")
     print(f"Output: {DOCS_DIR}")
 
 
