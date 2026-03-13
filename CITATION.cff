@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "PandaEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills"
+authors:
+  - family-names: Wang
+    given-names: Ji
+    email: jensen@srp.one
+  - family-names: Li
+    given-names: Xiaopu
+  - family-names: Xu
+    given-names: Wenhao
+  - family-names: Hu
+    given-names: Ning
+date-released: "2026-03-13"
+url: "https://github.com/SerendipityOneInc/PandaEval"
+type: software
+license: Apache-2.0
+keywords:
+  - AI agents
+  - skill evaluation
+  - self-evolving systems
+  - blind A/B testing
+  - automated improvement
+  - benchmark
