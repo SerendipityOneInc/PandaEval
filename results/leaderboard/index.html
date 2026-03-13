@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Eval Leaderboard</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #0d1117;
+        color: #c9d1d9;
+        padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 {
+        font-size: 2rem;
+        color: #f0f6fc;
+        margin-bottom: 0.5rem;
+    }
+    .subtitle {
+        color: #8b949e;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+    }
+    .meta-bar {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #161b22;
+        border-radius: 8px;
+        border: 1px solid #30363d;
+        font-size: 0.85rem;
+    }
+    .meta-bar span { color: #8b949e; }
+    .meta-bar strong { color: #c9d1d9; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #161b22;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #30363d;
+    }
+    th {
+        background: #21262d;
+        color: #f0f6fc;
+        padding: 12px 16px;
+        text-align: left;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+        border-bottom: 1px solid #30363d;
+    }
+    th:hover { background: #282e36; }
+    td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #21262d;
+        font-size: 0.9rem;
+    }
+    tr:hover { background: #1c2128; }
+    .rank { color: #8b949e; font-weight: 600; }
+    .skill-name a {
+        color: #58a6ff;
+        text-decoration: none;
+    }
+    .skill-name a:hover { text-decoration: underline; }
+    .score {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    .score-high { color: #3fb950; }
+    .score-mid { color: #d29922; }
+    .score-low { color: #db6d28; }
+    .score-bad { color: #f85149; }
+    .badge {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .badge-green { background: #238636; color: #fff; }
+    .badge-yellow { background: #9e6a03; color: #fff; }
+    .badge-orange { background: #bd561d; color: #fff; }
+    .badge-red { background: #da3633; color: #fff; }
+    .delta-pos { color: #3fb950; }
+    .delta-neg { color: #f85149; }
+    .delta-zero { color: #8b949e; }
+    .footer {
+        margin-top: 2rem;
+        text-align: center;
+        color: #484f58;
+        font-size: 0.8rem;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Skill Eval Leaderboard</h1>
+    <p class="subtitle">Automated evaluation of ClawHub skills — does the skill actually help?</p>
+
+    <div class="meta-bar">
+        <div><span>Engine:</span> <strong>skill-eval v0.3.0</strong></div>
+        <div><span>Skills Evaluated:</span> <strong>123</strong></div>
+        <div><span>Generated:</span> <strong>2026-03-09 13:04 UTC</strong></div>
+    </div>
+
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Skill</th>
+                <th onclick="sortTable(2)">Score</th>
+                <th>Verdict</th>
+                <th>With Skill</th>
+                <th>Baseline</th>
+                <th>Delta</th>
+                <th>Model</th>
+                <th onclick="sortTable(8)">Date</th>
+                <th>Tests</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td class="rank">#1</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/explain-code" target="_blank">
+                    Explain Code
+                </a>
+            </td>
+            <td class="score score-high">10.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#2</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/book-notes" target="_blank">
+                    BookNotes
+                </a>
+            </td>
+            <td class="score score-high">9.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#3</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/self-improving-with-reflection" target="_blank">
+                    Self-Improving with Reflection
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#4</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/easydoc-parse" target="_blank">
+                    EasyLink EasyDoc Parse
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#5</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/busapi" target="_blank">
+                    BusAPI - Agent Marketplace
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#6</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/binance-web3-openapi-skill" target="_blank">
+                    Binance Web3 API Skill
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#7</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/article-writer" target="_blank">
+                    Article Writer (Chinese Viral Style)
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#8</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ku-portal" target="_blank">
+                    KU Portal
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#9</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/scan-to-skill" target="_blank">
+                    Scan to Skill
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#10</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/gitverse" target="_blank">
+                    GitVerse Skill
+                </a>
+            </td>
+            <td class="score score-high">9.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#11</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ai-receptionist" target="_blank">
+                    AI Receptionist (Solvea)
+                </a>
+            </td>
+            <td class="score score-high">9.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#12</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/feishu-at-mention" target="_blank">
+                    Feishu @ Mention
+                </a>
+            </td>
+            <td class="score score-high">9.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#13</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/openbroker" target="_blank">
+                    OpenBroker
+                </a>
+            </td>
+            <td class="score score-high">9.1</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#14</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/review-summarizer" target="_blank">
+                    Review Summarizer
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#15</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/zhive" target="_blank">
+                    zHive Megathread
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#16</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/secure-api-calls" target="_blank">
+                    Secure API Calls (Keychains)
+                </a>
+            </td>
+            <td class="score score-high">9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#17</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ai-presentation-maker" target="_blank">
+                    AI Presentation Maker
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#18</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/xiaohongshu-comment" target="_blank">
+                    Xiaohongshu Comment Assistant
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#19</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/git-summary" target="_blank">
+                    Git Summary
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#20</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/speech" target="_blank">
+                    Speech Generation
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#21</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/wxmp-reader" target="_blank">
+                    WeChat Article Reader
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#22</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/atlas-cloud-ai-api" target="_blank">
+                    Atlas Cloud AI API
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#23</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/aqara-open-api" target="_blank">
+                    Aqara Open API
+                </a>
+            </td>
+            <td class="score score-high">9.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#24</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/x2c-publish" target="_blank">
+                    X2C Publish - Distribution & Wallet API
+                </a>
+            </td>
+            <td class="score score-high">8.9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#25</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/task-specialist" target="_blank">
+                    Task-Specialist
+                </a>
+            </td>
+            <td class="score score-high">8.9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#26</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/whale-share" target="_blank">
+                    Whale Share
+                </a>
+            </td>
+            <td class="score score-high">8.8</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#27</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/channel-bridge" target="_blank">
+                    ChannelBridge
+                </a>
+            </td>
+            <td class="score score-high">8.8</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#28</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/wechatmessaging" target="_blank">
+                    微信消息助手
+                </a>
+            </td>
+            <td class="score score-high">8.7</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#29</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/tts-3" target="_blank">
+                    TTS-3
+                </a>
+            </td>
+            <td class="score score-high">8.7</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#30</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/napcat-qq-bridge-installer" target="_blank">
+                    NapCat QQ Bridge Installer
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#31</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/pulse-board" target="_blank">
+                    Pulse Board - Operational Digest
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#32</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/polyclawster" target="_blank">
+                    Polyclawster
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#33</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/polyclawster-agent" target="_blank">
+                    Polyclawster Agent
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#34</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/waimai-merchant" target="_blank">
+                    Waimai Merchant - Food Delivery Management
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#35</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/zeelin-ai-detector" target="_blank">
+                    Zeelin AI Detector
+                </a>
+            </td>
+            <td class="score score-high">8.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#36</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/daily-report-writer" target="_blank">
+                    Daily Report Writer
+                </a>
+            </td>
+            <td class="score score-high">8.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#37</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/zeelin-search" target="_blank">
+                    Zeelin Search - Sentiment Data Query
+                </a>
+            </td>
+            <td class="score score-high">8.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#38</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/debug-checklist" target="_blank">
+                    Debug Checklist
+                </a>
+            </td>
+            <td class="score score-high">8.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#39</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/sql-query-optimizer" target="_blank">
+                    SQL Query Optimizer
+                </a>
+            </td>
+            <td class="score score-high">8.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#40</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/team-collab-skill" target="_blank">
+                    Team Collaboration Skill
+                </a>
+            </td>
+            <td class="score score-high">8.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#41</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-slide-generator" target="_blank">
+                    AnyGen Slide Generator
+                </a>
+            </td>
+            <td class="score score-high">8.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#42</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/modellix" target="_blank">
+                    Modellix
+                </a>
+            </td>
+            <td class="score score-high">8.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#43</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/trade-executor" target="_blank">
+                    trade-executor
+                </a>
+            </td>
+            <td class="score score-high">8.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#44</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-deep-research" target="_blank">
+                    AnyGen Deep Research
+                </a>
+            </td>
+            <td class="score score-high">8.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#45</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/seedance-ai-video" target="_blank">
+                    Seedance AI Video
+                </a>
+            </td>
+            <td class="score score-high">8.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#46</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/voiceclone" target="_blank">
+                    Voice Clone + TTS
+                </a>
+            </td>
+            <td class="score score-high">8.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#47</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/dev-progress-governor" target="_blank">
+                    Dev Progress Governor
+                </a>
+            </td>
+            <td class="score score-high">8.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#48</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/linsoai-track" target="_blank">
+                    linsoai-track
+                </a>
+            </td>
+            <td class="score score-high">8.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#49</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/creaa-ai" target="_blank">
+                    Creaa AI
+                </a>
+            </td>
+            <td class="score score-high">8.1</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#50</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/chat-lift" target="_blank">
+                    ChatLift
+                </a>
+            </td>
+            <td class="score score-high">8.1</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#51</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/cloudsway-aisearch" target="_blank">
+                    AI Search Skill
+                </a>
+            </td>
+            <td class="score score-high">8.1</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>0%</td>
+            <td><span class="delta-pos">+100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#52</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/x-manager" target="_blank">
+                    X Manager
+                </a>
+            </td>
+            <td class="score score-high">8.1</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#53</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/hi-light-openclaw" target="_blank">
+                    HiLight for OpenClaw
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#54</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/resume-cv-builder" target="_blank">
+                    Resume CV Builder
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#55</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/phy-ux-reviewer" target="_blank">
+                    UX Reviewer
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#56</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/founder-story-brand-narrative" target="_blank">
+                    Founder Story & Brand Narrative (DTC)
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#57</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/fitness-plan-flows" target="_blank">
+                    Fitness Plan Flows
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#58</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/3d-maker-companion" target="_blank">
+                    3D Maker Companion
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#59</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/clude-memory" target="_blank">
+                    Clude Memory
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#60</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/social-media-scheduler" target="_blank">
+                    Social Media Scheduler
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#61</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/kanbn-todo-api" target="_blank">
+                    Kan.bn TODO API
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#62</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/maxxit-lazy-trading" target="_blank">
+                    Maxxit Lazy Trading
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#63</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/sales-pipeline-tracker" target="_blank">
+                    Sales Pipeline Tracker
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#64</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/faithful-task-executor" target="_blank">
+                    Faithful Task Executor
+                </a>
+            </td>
+            <td class="score score-high">8.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+88%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#65</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/nansen-alpha-discovery" target="_blank">
+                    Nansen Alpha Discovery
+                </a>
+            </td>
+            <td class="score score-high">7.9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#66</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-data-analysis" target="_blank">
+                    AnyGen Data Analysis (CSV)
+                </a>
+            </td>
+            <td class="score score-high">7.9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#67</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/skill-feed" target="_blank">
+                    SkillFeed
+                </a>
+            </td>
+            <td class="score score-high">7.9</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#68</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/deep-research-cli" target="_blank">
+                    Deep Research CLI
+                </a>
+            </td>
+            <td class="score score-high">7.8</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#69</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ac-stock-ultrashort" target="_blank">
+                    A-Stock UltraShort
+                </a>
+            </td>
+            <td class="score score-high">7.8</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#70</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/vmware-aiops" target="_blank">
+                    VMware AIops
+                </a>
+            </td>
+            <td class="score score-high">7.8</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#71</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/linkedin-profile-audit" target="_blank">
+                    LinkedIn Profile Auto-Audit & Accuracy Correction
+                </a>
+            </td>
+            <td class="score score-high">7.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#72</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/coco-xyz" target="_blank">
+                    HXA-Connect — Bot-to-Bot Communication
+                </a>
+            </td>
+            <td class="score score-high">7.6</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#73</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ai-proposal-generator" target="_blank">
+                    AI Proposal Generator
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#74</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/chile" target="_blank">
+                    Chile Travel Guide
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#75</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/marketing-mode" target="_blank">
+                    Marketing Mode
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#76</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/engagelab-omni-connect" target="_blank">
+                    EngageLab Omni-Connect
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#77</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/greece" target="_blank">
+                    Greece Travel Guide
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#78</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/a-stock-kline-analyzer" target="_blank">
+                    A-Stock Kline Analyzer
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#79</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/argentina" target="_blank">
+                    Argentina Travel Guide
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#80</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/goplaces-togo" target="_blank">
+                    goplaces-togo
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#81</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/rendermark" target="_blank">
+                    RenderMark
+                </a>
+            </td>
+            <td class="score score-high">7.5</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#82</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/austria" target="_blank">
+                    Austria
+                </a>
+            </td>
+            <td class="score score-high">7.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>75%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#83</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/memorine" target="_blank">
+                    Memorine
+                </a>
+            </td>
+            <td class="score score-high">7.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#84</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ces" target="_blank">
+                    wekancli
+                </a>
+            </td>
+            <td class="score score-high">7.4</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+75%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#85</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/stt-simple" target="_blank">
+                    Simple Local STT (Whisper)
+                </a>
+            </td>
+            <td class="score score-high">7.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#86</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/decide" target="_blank">
+                    Decide
+                </a>
+            </td>
+            <td class="score score-high">7.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#87</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/codropshiping-product-search" target="_blank">
+                    Codropshiping Product Search
+                </a>
+            </td>
+            <td class="score score-high">7.3</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#88</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/xiaohongshu-search-summarizer" target="_blank">
+                    Xiaohongshu Search Summarizer
+                </a>
+            </td>
+            <td class="score score-high">7.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#89</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/papermc-ai-ops" target="_blank">
+                    PaperMC AI Ops
+                </a>
+            </td>
+            <td class="score score-high">7.2</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>75%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#90</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/client-tracker" target="_blank">
+                    ClientTracker - Freelancer CRM
+                </a>
+            </td>
+            <td class="score score-high">7.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#91</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/markdown-memory" target="_blank">
+                    markdown-memory
+                </a>
+            </td>
+            <td class="score score-high">7.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#92</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/telegram-routing" target="_blank">
+                    Telegram Routing Manager
+                </a>
+            </td>
+            <td class="score score-high">7.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#93</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/news-summary" target="_blank">
+                    News Summary
+                </a>
+            </td>
+            <td class="score score-high">7.0</td>
+            <td><span class="badge badge-green">Recommended</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#94</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/encrypted-docs" target="_blank">
+                    Encrypted Docs (Fileverse API)
+                </a>
+            </td>
+            <td class="score score-mid">6.9</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#95</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/newsnow-reader" target="_blank">
+                    NewsNow 新闻阅读器
+                </a>
+            </td>
+            <td class="score score-mid">6.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#96</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/ccfi" target="_blank">
+                    CCFI Data Skill
+                </a>
+            </td>
+            <td class="score score-mid">6.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#97</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/wxauto" target="_blank">
+                    微信自动化
+                </a>
+            </td>
+            <td class="score score-mid">6.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#98</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/skll-scan" target="_blank">
+                    Skill Scan - Security Scanner for OpenClaw Skills
+                </a>
+            </td>
+            <td class="score score-mid">6.6</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>100%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#99</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/user-growth-coach" target="_blank">
+                    User Growth Coach
+                </a>
+            </td>
+            <td class="score score-mid">6.4</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#100</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/auto-update" target="_blank">
+                    Auto-Update (OpenClaw + Skills)
+                </a>
+            </td>
+            <td class="score score-mid">6.4</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#101</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/scanner-for-openclaw" target="_blank">
+                    OpenClaw Security Scanner
+                </a>
+            </td>
+            <td class="score score-mid">6.3</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#102</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/canary-sr" target="_blank">
+                    Canary - Agent Safety Tripwire System
+                </a>
+            </td>
+            <td class="score score-mid">6.3</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>100%</td>
+            <td>75%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#103</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/super-product" target="_blank">
+                    Super Productivity CLI
+                </a>
+            </td>
+            <td class="score score-mid">6.3</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#104</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/tiger-trading" target="_blank">
+                    Tiger Trading Skill
+                </a>
+            </td>
+            <td class="score score-mid">6.2</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#105</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/small-goods-loyalty-incentives" target="_blank">
+                    Small-Goods Loyalty & Incentives (DTC)
+                </a>
+            </td>
+            <td class="score score-mid">6.2</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#106</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/healthy-backup" target="_blank">
+                    Healthy Backup
+                </a>
+            </td>
+            <td class="score score-mid">6.2</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#107</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-suite" target="_blank">
+                    AnyGen
+                </a>
+            </td>
+            <td class="score score-mid">6.1</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>88%</td>
+            <td>38%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#108</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/invoice-verify-hsy" target="_blank">
+                    发票查验-慧穗云
+                </a>
+            </td>
+            <td class="score score-mid">6.0</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#109</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-financial-research" target="_blank">
+                    AnyGen Financial Research Assistant
+                </a>
+            </td>
+            <td class="score score-mid">5.9</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#110</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/starmemo" target="_blank">
+                    StarMemo
+                </a>
+            </td>
+            <td class="score score-mid">5.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>62%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+12%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#111</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/anygen-diagram-generator" target="_blank">
+                    AnyGen AI Diagram Generator
+                </a>
+            </td>
+            <td class="score score-mid">5.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>25%</td>
+            <td><span class="delta-pos">+50%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#112</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/attorney" target="_blank">
+                    Attorney
+                </a>
+            </td>
+            <td class="score score-mid">5.8</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+12%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#113</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/test-runner" target="_blank">
+                    Test Runner
+                </a>
+            </td>
+            <td class="score score-mid">5.5</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>100%</td>
+            <td>100%</td>
+            <td><span class="delta-zero">0%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#114</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/data-model-designer" target="_blank">
+                    Data Model Designer
+                </a>
+            </td>
+            <td class="score score-mid">5.5</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>100%</td>
+            <td>100%</td>
+            <td><span class="delta-zero">0%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#115</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/best-product" target="_blank">
+                    Best Product Recommender
+                </a>
+            </td>
+            <td class="score score-mid">5.5</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>62%</td>
+            <td><span class="delta-pos">+12%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#116</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/mind-layer" target="_blank">
+                    Mind Layer
+                </a>
+            </td>
+            <td class="score score-mid">5.3</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>75%</td>
+            <td>50%</td>
+            <td><span class="delta-pos">+25%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#117</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/data-analyst" target="_blank">
+                    Data Analyst
+                </a>
+            </td>
+            <td class="score score-mid">5.0</td>
+            <td><span class="badge badge-yellow">Conditional</span></td>
+            <td>100%</td>
+            <td>100%</td>
+            <td><span class="delta-zero">0%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#118</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/adam-skill" target="_blank">
+                    Adam Daily Life Manager
+                </a>
+            </td>
+            <td class="score score-low">4.9</td>
+            <td><span class="badge badge-orange">Marginal</span></td>
+            <td>88%</td>
+            <td>88%</td>
+            <td><span class="delta-zero">0%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td class="rank">#119</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/baidu-search" target="_blank">
+                    baidu-search
+                </a>
+            </td>
+            <td class="score score-low">3.4</td>
+            <td><span class="badge badge-orange">Marginal</span></td>
+            <td>38%</td>
+            <td>75%</td>
+            <td><span class="delta-neg">-38%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-06</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#120</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/finance-lite" target="_blank">
+                    finance-lite
+                </a>
+            </td>
+            <td class="score score-bad">2.8</td>
+            <td><span class="badge badge-red">Not Recommended</span></td>
+            <td>25%</td>
+            <td>88%</td>
+            <td><span class="delta-neg">-62%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-06</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#121</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/tugou-monitor" target="_blank">
+                    tugou-monitor
+                </a>
+            </td>
+            <td class="score score-bad">2.6</td>
+            <td><span class="badge badge-red">Not Recommended</span></td>
+            <td>25%</td>
+            <td>12%</td>
+            <td><span class="delta-pos">+12%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-09</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#122</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/bio-generator-pay" target="_blank">
+                    bio-generator-pay
+                </a>
+            </td>
+            <td class="score score-bad">2.0</td>
+            <td><span class="badge badge-red">Not Recommended</span></td>
+            <td>0%</td>
+            <td>100%</td>
+            <td><span class="delta-neg">-100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-06</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td class="rank">#123</td>
+            <td class="skill-name">
+                <a href="https://clawhub.com/skills/hashtag-generator-pay" target="_blank">
+                    hashtag-generator-pay
+                </a>
+            </td>
+            <td class="score score-bad">2.0</td>
+            <td><span class="badge badge-red">Not Recommended</span></td>
+            <td>0%</td>
+            <td>100%</td>
+            <td><span class="delta-neg">-100%</span></td>
+            <td>claude-opus-4-6</td>
+            <td>2026-03-06</td>
+            <td>2</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Generated by skill-eval v0.3.0 | 2026-03-09 13:04 UTC</p>
+        <p>Scores: 7-10 Recommended | 5-6.9 Conditional | 3-4.9 Marginal | 0-2.9 Not Recommended</p>
+    </div>
+</div>
+
+<script>
+function sortTable(colIdx) {
+    const table = document.getElementById('leaderboard');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    const dir = table.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+    table.dataset.sortDir = dir;
+
+    rows.sort((a, b) => {
+        let aVal = a.cells[colIdx].textContent.trim();
+        let bVal = b.cells[colIdx].textContent.trim();
+        let aNum = parseFloat(aVal);
+        let bNum = parseFloat(bVal);
+
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return dir === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        return dir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    });
+
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+</body>
+</html>
