@@ -28,10 +28,13 @@ def parse_skill_card(filepath: str) -> dict | None:
         except json.JSONDecodeError:
             pass
 
-    # Extract name from title
-    name_match = re.match(r"# Skill Card: (.+)", text)
-    if name_match:
-        data.setdefault("name", name_match.group(1).strip())
+    # Extract name from title (skip DEPENDENCY-GATED headers, use last real name)
+    name_matches = re.findall(r"^# Skill Card: (.+)$", text, re.MULTILINE)
+    for nm in name_matches:
+        nm = nm.strip()
+        if "DEPENDENCY-GATED" not in nm and "{skill_name}" not in nm:
+            data.setdefault("name", nm)
+            break
 
     # Extract description
     desc_match = re.search(r"^> (.+)$", text, re.MULTILINE)
@@ -382,6 +385,12 @@ def main():
             skills.append(s)
         else:
             skipped += 1
+
+    # Disambiguate duplicate names by appending slug
+    name_count = Counter(s.get("name", "") for s in skills)
+    for s in skills:
+        if name_count[s.get("name", "")] > 1 and s.get("slug"):
+            s["name"] = f"{s['name']} ({s['slug']})"
 
     skills.sort(key=lambda x: x.get("score", 0), reverse=True)
 
