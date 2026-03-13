@@ -1,6 +1,14 @@
-# PandaEval: Do AI Agent Skills Actually Work?
+# PandaEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills
 
-> We evaluated **123 AI agent skills**. **76% actually work.** Here's everything we learned.
+PandaEval is a self-evolving evaluation engine that blind-tests AI agent skills by running each task twice -- with and without the skill -- and grading outputs against deterministic assertions and LLM-as-judge rubrics. It maintains two closed feedback loops: one that sharpens its own evaluation methodology, and one that automatically rewrites underperforming skills. We evaluated **123 skills** from the ClawHub marketplace -- **76.4% measurably improve model output**, and the engine discovered that *removing* 60-80% of a skill's content outperforms adding to it.
+
+<p align="center">
+  <a href="#evaluate-your-own-skills">Quick Start</a> &bull;
+  <a href="methodology/SKILL-EVAL.md">Methodology</a> &bull;
+  <a href="results/leaderboard/index.html">Leaderboard</a> &bull;
+  <a href="paper/PandaEval.pdf">Paper</a> &bull;
+  <a href="knowledge/">Knowledge Base</a>
+</p>
 
 [![Skills Evaluated](https://img.shields.io/badge/skills%20evaluated-123-blue)](results/skill-cards/)
 [![Recommended](https://img.shields.io/badge/recommended-76.4%25-green)](results/leaderboard/)
@@ -15,16 +23,6 @@
 - **The #1 improvement strategy is Remove > Add** -- deleting 60-80% of a skill's content outperforms adding to it
 - **The evaluation engine itself evolved** from 7 phases (v0.1.0) to 12 phases (v0.4.0), catching failure modes each prior version missed
 - **8 failure modes discovered**, including phantom tooling (43% prevalence), reference manual bloat (21%), and template compliance drift
-
-## Quick Links
-
-| Resource | Description |
-|----------|-------------|
-| [Leaderboard](results/leaderboard/index.html) | Interactive ranking of all 123 skills |
-| [Paper](paper/skill-eval.pdf) | Full research paper (SkillEval: A Self-Evolving Framework) |
-| [Methodology](methodology/SKILL-EVAL.md) | The self-evolving evaluation engine spec |
-| [Skill Cards](results/skill-cards/) | Individual evaluation reports (446 cards) |
-
 
 ---
 
@@ -128,7 +126,7 @@ This strategy successfully improved 3/3 tested skills by +1.5 to +2.0 points. Se
 
 ## Methodology
 
-SkillEval uses **blind A/B testing**: every task runs twice on the same model -- once with the skill, once without. Outputs are graded against deterministic assertions (file checks, keyword matching) and LLM-as-judge rubrics.
+PandaEval uses **blind A/B testing**: every task runs twice on the same model -- once with the skill, once without. Outputs are graded against deterministic assertions (file checks, keyword matching) and LLM-as-judge rubrics.
 
 The engine has **two self-evolving loops**:
 - **Evaluation loop**: evaluate → learn → improve methodology → better evaluations
@@ -144,8 +142,8 @@ See [SKILL-EVAL.md](methodology/SKILL-EVAL.md) for the full 12-phase specificati
 PandaEval/
 ├── README.md                        # This file
 ├── paper/
-│   ├── skill-eval.pdf               # Research paper
-│   └── skill-eval.tex               # LaTeX source
+│   ├── PandaEval.pdf               # Research paper
+│   └── PandaEval.tex               # LaTeX source
 ├── methodology/
 │   ├── SKILL-EVAL.md                # Self-evolving eval engine spec
 │   └── VERSION                      # Engine version
@@ -171,7 +169,7 @@ PandaEval/
 ## Citation
 
 ```bibtex
-@article{wang2026skilleval,
+@article{wang2026pandaeval,
   title={PandaEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills},
   author={Wang, Ji and Li, Xiaopu and Xu, Wenhao and Hu, Ning},
   year={2026},
@@ -187,4 +185,4 @@ Apache License 2.0 -- see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with [SkillEval](methodology/SKILL-EVAL.md) v0.4.0 | Evaluated on Claude Opus 4 | March 2026*
+*Built with [PandaEval](methodology/SKILL-EVAL.md) v0.4.0 | Evaluated on Claude Opus 4 | March 2026*
