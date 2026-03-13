@@ -8,70 +8,75 @@
 </head>
 <body>
 <div class="container detail-page">
-    <a href="../index.html" class="back-btn">← Back to list</a>
-    <div class="detail-header-card">
-        <div class="detail-info">
-            <h1>Cron Mastery</h1>
-            <p class="detail-sub">communication · 2026-03-13 · 10,060 downloads</p>
-            <p class="detail-desc">Master OpenClaw's timing systems. Use for scheduling reliable reminders, setting up periodic maintenance (janitor jobs), and understanding when to use Cron v...</p>
-            <div class="tags"><span class="tag tag-green">Highly Recommended</span></div>
-        </div>
-        <div class="score-circle score-circle-lg score-high">
-            <span class="score-num">9.0</span>
-            <span class="score-den">/10</span>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="../index.html" class="back-btn">&larr; Back</a>
+
+    <div class="detail-header">
+        <div class="detail-top">
+            <div class="detail-info">
+                <h1>Cron Mastery</h1>
+                <div class="detail-meta">
+                    <span class="detail-domain">communication</span>
+                    <span class="detail-meta-item">2026-03-13</span>
+                    <span class="detail-meta-item">10,060 downloads</span>
+                    <span class="detail-meta-item">Hybrid</span>
+                </div>
+                <p class="detail-desc">Master OpenClaw's timing systems. Use for scheduling reliable reminders, setting up periodic maintenance (janitor jobs), and understanding when to use Cron v...</p>
+                <div class="detail-tags"><span class="verdict-tag vt-green">Highly Recommended</span></div>
+            </div>
+            <div class="detail-score" style="background:var(--green-dim);color:var(--green)">
+                <span class="detail-score-num">9.0</span>
+                <span class="detail-score-den">/10</span>
+            </div>
         </div>
     </div>
 
     <section class="detail-section">
-        <h2 class="section-title">Evaluation Scores</h2>
-        <div class="detail-scores-grid">
-        <div class="detail-score-item">
+        <h2 class="section-title">Evaluation Breakdown</h2>
+        <div class="detail-radar-section">
+            <div class="detail-radar"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50.0,12.0 86.1,38.3 72.3,80.7 27.7,80.7 13.9,38.3" class="radar-grid"/><polygon points="50.0,31.0 68.1,44.1 61.2,65.4 38.8,65.4 31.9,44.1" class="radar-grid"/><line x1="50" y1="50" x2="50.0" y2="12.0" class="radar-axis"/><line x1="50" y1="50" x2="86.1" y2="38.3" class="radar-axis"/><line x1="50" y1="50" x2="72.3" y2="80.7" class="radar-axis"/><line x1="50" y1="50" x2="27.7" y2="80.7" class="radar-axis"/><line x1="50" y1="50" x2="13.9" y2="38.3" class="radar-axis"/><polygon points="50.0,21.5 86.1,38.3 66.8,73.1 27.7,80.7 13.9,38.3" class="radar-fill"/><circle cx="50.0" cy="21.5" class="radar-dot"/><circle cx="86.1" cy="38.3" class="radar-dot"/><circle cx="66.8" cy="73.1" class="radar-dot"/><circle cx="27.7" cy="80.7" class="radar-dot"/><circle cx="13.9" cy="38.3" class="radar-dot"/><text x="50.0" y="4.0" class="radar-label">Structure</text><text x="93.7" y="35.8" class="radar-label">Specificity</text><text x="77.0" y="87.2" class="radar-label">Examples</text><text x="23.0" y="87.2" class="radar-label">Scope</text><text x="6.3" y="35.8" class="radar-label">Actionability</text></svg></div>
+            <div class="detail-scores-list"><div class="detail-score-item has-tip" data-tip="Agent can act immediately">
             <span class="ds-label">actionability</span>
             <div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div>
             <span class="ds-val">2/2</span>
-        </div>
-        <div class="detail-score-item">
+        </div><div class="detail-score-item has-tip" data-tip="Usage examples, demos, samples">
             <span class="ds-label">examples</span>
             <div class="bar-track"><div class="bar-fill" style="width:75.0%"></div></div>
             <span class="ds-val">1.5/2</span>
-        </div>
-        <div class="detail-score-item">
+        </div><div class="detail-score-item has-tip" data-tip="Appropriate size, well-bounded">
             <span class="ds-label">scope</span>
             <div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div>
             <span class="ds-val">2/2</span>
-        </div>
-        <div class="detail-score-item">
+        </div><div class="detail-score-item has-tip" data-tip="Concrete instructions, code examples">
             <span class="ds-label">specificity</span>
             <div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div>
             <span class="ds-val">2/2</span>
-        </div>
-        <div class="detail-score-item">
+        </div><div class="detail-score-item has-tip" data-tip="Clear sections, metadata, organization">
             <span class="ds-label">structure</span>
             <div class="bar-track"><div class="bar-fill" style="width:75.0%"></div></div>
             <span class="ds-val">1.5/2</span>
         </div></div>
+        </div>
     </section>
 
     <section class="detail-section">
         <h2 class="section-title">Metrics</h2>
-        <div class="metrics-grid">
-        <div class="metric-item">
+        <div class="metrics-grid"><div class="metric-item">
             <span class="metric-label">Word Count</span>
             <span class="metric-val">884</span>
-        </div>
-        <div class="metric-item">
+        </div><div class="metric-item">
             <span class="metric-label">Line Count</span>
             <span class="metric-val">114</span>
-        </div>
-        <div class="metric-item">
+        </div><div class="metric-item">
             <span class="metric-label">Files In Package</span>
             <span class="metric-val">4</span>
-        </div>
-        <div class="metric-item">
+        </div><div class="metric-item">
             <span class="metric-label">Has Scripts</span>
             <span class="metric-val">No</span>
-        </div>
-        <div class="metric-item">
+        </div><div class="metric-item">
             <span class="metric-label">Has References</span>
             <span class="metric-val">Yes</span>
         </div></div>
@@ -83,5 +88,6 @@
         <p class="eval-engine">skill-eval v0.5.0</p>
     </section>
 </div>
+<script src="../app.js"></script>
 </body>
 </html>
