@@ -7,8 +7,9 @@ import re
 from pathlib import Path
 from collections import Counter
 
-CARDS_DIR = Path(__file__).parent.parent / "results" / "skill-cards"
-DOCS_DIR = Path(__file__).parent.parent / "docs"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+CARDS_DIR = ROOT_DIR / "results" / "skill-cards"
+DOCS_DIR = ROOT_DIR / "docs"
 
 
 def parse_skill_card(filepath: str) -> dict | None:
@@ -360,13 +361,20 @@ def build_index_html(skills: list[dict], domains: list[str], verdicts: list[str]
 
 def main():
     cards_path = CARDS_DIR
+    print(f"Cards dir: {cards_path} (exists: {cards_path.exists()})")
+    md_files = sorted(cards_path.glob("*.md"))
+    print(f"Found {len(md_files)} .md files")
+
     skills = []
-    for f in sorted(cards_path.glob("*.md")):
+    skipped = 0
+    for f in md_files:
         if f.name == "TEMPLATE.md":
             continue
         s = parse_skill_card(str(f))
         if s:
             skills.append(s)
+        else:
+            skipped += 1
 
     skills.sort(key=lambda x: x.get("score", 0), reverse=True)
 
@@ -386,7 +394,7 @@ def main():
         detail_html = build_detail_html(s)
         (DOCS_DIR / "detail" / f"{slug}.html").write_text(detail_html, encoding="utf-8")
 
-    print(f"Generated dashboard: {len(skills)} skills, {len(domains)} domains")
+    print(f"Generated dashboard: {len(skills)} skills, {skipped} skipped, {len(domains)} domains")
     print(f"Output: {DOCS_DIR}")
 
 
