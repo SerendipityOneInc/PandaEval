@@ -382,6 +382,9 @@ def main():
     for f in md_files:
         if f.name == "TEMPLATE.md":
             continue
+        if "-v0.3.0.md" in f.name:
+            skipped += 1
+            continue
         s = parse_skill_card(str(f))
         if s:
             skills.append(s)
