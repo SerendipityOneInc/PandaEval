@@ -12,6 +12,41 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 CARDS_DIR = ROOT_DIR / "results" / "skill-cards"
 DOCS_DIR = ROOT_DIR / "docs"
 
+# ─── Category auto-tagging ───
+
+CATEGORY_RULES = [
+    ("Finance",     ["stock", "trading", "trade", "finance", "crypto", "binance", "kline",
+                     "whale", "polyclawster", "openbroker", "tiger", "maxxit", "nansen",
+                     "market", "invest", "forex", "ccfi"]),
+    ("Social",      ["linkedin", "twitter", "xiaohongshu", "social", "hashtag", "wechat",
+                     "telegram", "channel", "wxauto", "wxmp", "newsnow", "engagelab",
+                     "napcat", "x-manager", "x2c"]),
+    ("Writing",     ["writer", "article", "proposal", "presentation", "slide", "resume",
+                     "bio", "story", "narrative", "copywrite", "blog", "content", "rendermark"]),
+    ("Developer",   ["code", "git", "debug", "sql", "api", "vmware", "papermc", "canary",
+                     "scan", "secure", "developer", "deploy", "auto-update", "rendermark"]),
+    ("Research",    ["research", "search", "memory", "notes", "book", "deep", "markdown",
+                     "memorine", "starmemo", "zeelin", "knowledge", "arxiv", "clude",
+                     "hi-light", "review"]),
+    ("Productivity",["task", "plan", "schedule", "daily", "decide", "fitness", "sales",
+                     "pipeline", "client", "growth", "productivity", "reminder", "calendar",
+                     "todo", "kanbn", "pulse", "tugou", "linsoai"]),
+    ("Media",       ["video", "speech", "tts", "voice", "stt", "image", "diagram", "3d",
+                     "audio", "media", "seedance", "anygen"]),
+    ("Travel",      ["travel", "argentina", "austria", "chile", "greece", "goplaces",
+                     "place", "local", "waimai"]),
+    ("Business",    ["attorney", "business", "invoice", "commerce", "loyalty", "merchant",
+                     "crm", "product", "busapi", "ces", "encrypted", "dropship"]),
+]
+
+
+def derive_category(name: str, slug: str, description: str) -> str:
+    text = f"{name} {slug} {description}".lower()
+    for category, keywords in CATEGORY_RULES:
+        if any(kw in text for kw in keywords):
+            return category
+    return "Other"
+
 
 def parse_skill_card(filepath: str) -> dict | None:
     """Parse a single skill card markdown file into a dict."""
@@ -99,6 +134,10 @@ def parse_skill_card(filepath: str) -> dict | None:
 
     if "score" not in data or "name" not in data:
         return None
+
+    if not data.get("domain"):
+        slug = data.get("slug", data.get("skill_slug", ""))
+        data["domain"] = derive_category(data["name"], slug, data.get("description", ""))
 
     return data
 
