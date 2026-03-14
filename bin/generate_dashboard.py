@@ -170,26 +170,27 @@ def build_score_ring(score, max_val=10, size=48, sw=3.5):
 
 # ─── Radar SVG (detail page only) ───
 
-RADAR_DIMS = ["structure", "specificity", "examples", "scope", "actionability"]
-RADAR_LABELS_FULL = ["Structure", "Specificity", "Examples", "Scope", "Actionability"]
+RADAR_DIMS = ["quality", "value-add", "efficiency"]
+RADAR_LABELS_FULL = ["Quality", "Value-add", "Efficiency"]
 R_CX, R_CY, R_R = 50, 50, 38
 R_LABEL_R = 46
+N_DIMS = len(RADAR_DIMS)
 
 
 def _pent_pt(i, r, cx=R_CX, cy=R_CY):
-    a = -math.pi / 2 + 2 * math.pi * i / 5
+    a = -math.pi / 2 + 2 * math.pi * i / N_DIMS
     return cx + r * math.cos(a), cy + r * math.sin(a)
 
 
 def _pent_str(r):
-    return " ".join(f"{x:.1f},{y:.1f}" for x, y in (_pent_pt(i, r) for i in range(5)))
+    return " ".join(f"{x:.1f},{y:.1f}" for x, y in (_pent_pt(i, r) for i in range(N_DIMS)))
 
 
 def build_radar_svg(breakdown: dict) -> str:
     grid = f'<polygon points="{_pent_str(R_R)}" class="radar-grid"/>'
     grid += f'<polygon points="{_pent_str(R_R * 0.5)}" class="radar-grid"/>'
     axes = ""
-    for i in range(5):
+    for i in range(N_DIMS):
         px, py = _pent_pt(i, R_R)
         axes += f'<line x1="{R_CX}" y1="{R_CY}" x2="{px:.1f}" y2="{py:.1f}" class="radar-axis"/>'
     pts, dots = [], ""
@@ -225,7 +226,7 @@ def build_card_bar_html(breakdown: dict) -> str:
             cls = "zero"
         mx = bd["max"]
         sc_v = bd["score"]
-        segs += f'<div class="card-bar-seg {cls}" style="flex:{mx}" title="{dim}: {sc_v:g}/{mx:g}"></div>'
+        segs += f'<div class="card-bar-seg {cls}" style="flex:1" title="{dim}: {sc_v:g}/{mx:g}"></div>'
     return segs
 
 
@@ -567,7 +568,7 @@ def main():
     for f in md_files:
         if f.name == "TEMPLATE.md":
             continue
-        if "-v0.3.0.md" in f.name:
+        if "-v0.5.0.md" in f.name:
             skipped += 1
             continue
         s = parse_skill_card(str(f))
