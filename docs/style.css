@@ -709,6 +709,11 @@ body::after {
     border: 1px solid var(--border);
     font-weight: 500;
 }
+.flag-tag--requires-credentials {
+    color: #ef4444;
+    background: rgba(239,68,68,0.1);
+    border-color: rgba(239,68,68,0.35);
+}
 .card-type-label {
     font-size: 0.58rem;
     color: var(--text-4);
