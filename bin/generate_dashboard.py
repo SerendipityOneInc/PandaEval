@@ -105,6 +105,11 @@ def parse_skill_card(filepath: str) -> dict | None:
 
 # ─── Helpers ───
 
+FLAG_LABELS = {
+    "dependency-gated": "requires-credentials",
+}
+
+
 def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
@@ -269,7 +274,9 @@ def build_card_html(skill: dict) -> str:
 
     flags_html = ""
     for f in s.get("flags", []):
-        flags_html += f'<span class="flag-tag">{esc(f)}</span>'
+        label = FLAG_LABELS.get(f, f)
+        cls = f"flag-tag flag-tag--{label}" if label in FLAG_LABELS.values() else "flag-tag"
+        flags_html += f'<span class="{cls}">{esc(label)}</span>'
 
     bar_html = build_card_bar_html(breakdown)
     ring_html = build_score_ring(score)
@@ -319,7 +326,9 @@ def build_detail_html(skill: dict) -> str:
 
     tags_html = ""
     for f in s.get("flags", []):
-        tags_html += f'<span class="flag-tag">{esc(f)}</span>'
+        label = FLAG_LABELS.get(f, f)
+        cls = f"flag-tag flag-tag--{label}" if label in FLAG_LABELS.values() else "flag-tag"
+        tags_html += f'<span class="{cls}">{esc(label)}</span>'
     tags_html += f'<span class="verdict-tag vt-{vc}">{esc(verdict)}</span>'
 
     breakdown = s.get("breakdown", {})
