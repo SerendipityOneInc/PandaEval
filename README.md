@@ -6,6 +6,7 @@ PandaEval is a self-evolving evaluation engine that blind-tests AI agent skills 
   <a href="#evaluate-your-own-skills">Quick Start</a> &bull;
   <a href="methodology/SKILL-EVAL.md">Methodology</a> &bull;
   <a href="https://pandaclaw.ai/eval">Leaderboard</a> &bull;
+  <a href="docs/security.md">Security Scan</a> &bull;
   <a href="paper/PandaEval.pdf">Paper</a> &bull;
   <a href="knowledge/">Knowledge Base</a>
 </p>
@@ -141,12 +142,16 @@ See [SKILL-EVAL.md](methodology/SKILL-EVAL.md) for the full 12-phase specificati
 ```
 PandaEval/
 ├── README.md                        # This file
+├── pandaeval/                       # Core Python package
+│   └── security/                    # Security evaluation module (docs/security.md)
 ├── paper/
 │   ├── PandaEval.pdf               # Research paper
 │   └── PandaEval.tex               # LaTeX source
 ├── methodology/
 │   ├── SKILL-EVAL.md                # Self-evolving eval engine spec
 │   └── VERSION                      # Engine version
+├── docs/
+│   └── security.md                  # Security scan usage guide
 ├── knowledge/                       # Accumulated eval wisdom
 │   ├── lessons.md                   # What worked, what didn't
 │   ├── eval-patterns.md             # Reusable assertion templates
@@ -158,6 +163,7 @@ PandaEval/
 ├── results/
 │   ├── leaderboard/index.html       # Interactive HTML leaderboard
 │   └── skill-cards/                 # 415 individual eval reports
+├── tests/                           # Unit & integration tests
 └── scripts/                         # Card & leaderboard generators
     ├── generate_skill_card.py
     ├── generate_leaderboard.py
