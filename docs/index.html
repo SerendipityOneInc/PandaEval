@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PandaEval — Skill Evaluation Dashboard</title>
+<title>PandaEval — A Self-Evolving Framework for Evaluating AI Agent Skills</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,6 +22,72 @@
             <span class="logo-text">PandaEval</span>
         </div>
         <span class="header-meta">skill-eval &middot; 118 skills &middot; 10 domains</span>
+    </div>
+
+    <section class="intro">
+        <h1 class="intro-headline">A <span class="intro-gradient">Self-Evolving</span> Framework for<br>Evaluating AI Agent Skills</h1>
+        <p class="intro-sub">
+            PandaEval is a <strong>self-evolving</strong> evaluation engine that blind-tests AI agent skills by running each task
+            twice&mdash;with and without the skill&mdash;and grading outputs against deterministic assertions and LLM-as-judge
+            rubrics. Two closed feedback loops let the engine sharpen its own methodology <em>and</em> automatically
+            rewrite underperforming skills.
+        </p>
+        <div class="intro-highlights">
+            <div class="intro-hi-item">
+                <span class="intro-hi-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+                <div>
+                    <strong>76.4% of skills improve output</strong>
+                    <span class="intro-hi-detail">Blind A/B tested against baseline</span>
+                </div>
+            </div>
+            <div class="intro-hi-item">
+                <span class="intro-hi-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </span>
+                <div>
+                    <strong>Remove &gt; Add</strong>
+                    <span class="intro-hi-detail">Deleting 60-80% of a skill outperforms adding to it</span>
+                </div>
+            </div>
+            <div class="intro-hi-item">
+                <span class="intro-hi-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </span>
+                <div>
+                    <strong>Self-evolving engine</strong>
+                    <span class="intro-hi-detail">From 7 phases (v0.1) to 12 phases (v0.4), catching failure modes each version missed</span>
+                </div>
+            </div>
+            <div class="intro-hi-item">
+                <span class="intro-hi-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </span>
+                <div>
+                    <strong>8 failure modes cataloged</strong>
+                    <span class="intro-hi-detail">Phantom tooling (43%), reference bloat (21%), and more</span>
+                </div>
+            </div>
+        </div>
+        <div class="intro-actions">
+            <a href="https://github.com/SerendipityOneInc/PandaEval" class="btn-primary" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="https://arxiv.org/abs/placeholder" class="btn-secondary" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Read Paper
+            </a>
+            <a href="https://github.com/SerendipityOneInc/PandaEval#evaluate-your-own-skills" class="btn-secondary" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Quick Start
+            </a>
+        </div>
+    </section>
+
+    <div class="section-divider">
+        <span class="section-divider-label">Dashboard</span>
     </div>
 
     <div class="hero-stats">
