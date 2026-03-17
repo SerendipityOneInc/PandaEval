@@ -19,6 +19,9 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  SITE_BASE_URL: ${{ vars.SITE_BASE_URL }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -35,6 +38,42 @@ jobs:
 
       - name: Generate dashboard
         run: python bin/generate_dashboard.py
+
+      - name: Generate sitemap
+        run: |
+          python -c "
+          import os, urllib.parse
+          from datetime import datetime, timezone
+
+          base_url = os.environ['SITE_BASE_URL']
+          docs_dir = 'docs'
+          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+
+          html_files = []
+          for root, dirs, files in os.walk(docs_dir):
+              for f in sorted(files):
+                  if f.endswith('.html'):
+                      rel = os.path.relpath(os.path.join(root, f), docs_dir)
+                      html_files.append(rel)
+          html_files.sort()
+
+          lines = ['<?xml version=\"1.0\" encoding=\"UTF-8\"?>']
+          lines.append('<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">')
+          for f in html_files:
+              parts = f.split('/')
+              encoded = '/'.join(urllib.parse.quote(p, safe='') for p in parts)
+              priority = '1.0' if f == 'index.html' else '0.6'
+              lines.append('  <url>')
+              lines.append(f'    <loc>{base_url}{encoded}</loc>')
+              lines.append(f'    <lastmod>{today}</lastmod>')
+              lines.append(f'    <priority>{priority}</priority>')
+              lines.append('  </url>')
+          lines.append('</urlset>')
+
+          with open(os.path.join(docs_dir, 'sitemap.xml'), 'w') as out:
+              out.write('\n'.join(lines) + '\n')
+          print(f'Generated sitemap.xml with {len(html_files)} URLs')
+          "
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
