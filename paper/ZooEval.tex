@@ -41,7 +41,7 @@
 
 % ---- Title ----
 \title{%
-\textbf{PandaEval: A Self-Evolving Framework\\for Evaluating and Improving AI Agent Skills}
+\textbf{ZooEval: A Self-Evolving Framework\\for Evaluating and Improving AI Agent Skills}
 }
 
 \author{
@@ -63,11 +63,11 @@ Serendipity One Inc. \\
 \begin{abstract}
 AI agents increasingly rely on modular \emph{skills}---instruction packages that extend agent capabilities with domain-specific workflows, tool-use patterns, and output conventions.
 But do these skills actually help? And can the system that evaluates them \emph{get better at evaluating them over time}?
-We present \textbf{PandaEval}, a \emph{self-evolving} evaluation engine built on two interlocking feedback loops: an \textbf{evaluation loop} that blind-tests skills and accumulates grading knowledge, and an \textbf{improvement loop} that automatically rewrites underperforming skills and learns which rewrite strategies work.
+We present \textbf{ZooEval}, a \emph{self-evolving} evaluation engine built on two interlocking feedback loops: an \textbf{evaluation loop} that blind-tests skills and accumulates grading knowledge, and an \textbf{improvement loop} that automatically rewrites underperforming skills and learns which rewrite strategies work.
 We evaluate \textbf{123 real skills} from the ClawHub marketplace using Claude Opus, running each task twice---with and without the skill---and grading against deterministic assertions and LLM-as-judge rubrics.
 Key findings: (1)~76.4\% of skills measurably improve model output; (2)~the evaluation engine evolved from 7 phases to 12 phases across four versions, with each version catching failure modes the previous one missed---later batches discovered \emph{assertion-skill mismatch} and \emph{framework inflation} that v0.1.0 was blind to; (3)~the improvement engine successfully upgraded 3/3 targeted skills by +1.5--2.0 points using a learned pattern library, with the counterintuitive finding that \emph{removing} 60--80\% of skill content outperforms adding to it; (4)~the system accumulated a self-evolving knowledge base of 8~failure modes, 15+~lessons, 5~improvement patterns, and 19~skill profiles, each feeding back into the methodology that produced them.
 Both loops are closed: evaluation knowledge improves future evaluations, and improvement knowledge improves future improvements. The engine, like the skills it evaluates, gets measurably better over time.
-All artifacts are publicly available.\footnote{\url{https://github.com/SerendipityOneInc/PandaEval}}
+All artifacts are publicly available.\footnote{\url{https://github.com/SerendipityOneInc/ZooEval}}
 \end{abstract}
 
 \noindent\textbf{Keywords:} AI agents, skill evaluation, self-evolving systems, blind A/B testing, automated improvement, benchmark
@@ -82,7 +82,7 @@ This paper asks a simple question: \textbf{do these skills actually work?}
 
 Existing evaluation paradigms are poorly suited to answer it. Pairwise preference arenas \citep{chiang2024chatbot} compare free-form text outputs, but skills produce \emph{actions} (creating files, calling APIs, generating structured artifacts). Static benchmarks \citep{hendrycks2021mmlu, chen2021humaneval} measure model capabilities, not the quality of instruction packages that guide models. Tool-use benchmarks \citep{qin2023toolllm, li2023apibank} evaluate whether models can call APIs, not whether a specific skill package improves the end result.
 
-We built PandaEval to answer this question empirically. The core evaluation is deliberately simple: run each task twice on the same model---once with the skill loaded, once without---and compare outputs against the same assertions. What makes the system novel is that it doesn't just evaluate skills; it \emph{learns from its own evaluations} and \emph{learns from its own improvements}, creating two interlocking self-evolving loops.
+We built ZooEval to answer this question empirically. The core evaluation is deliberately simple: run each task twice on the same model---once with the skill loaded, once without---and compare outputs against the same assertions. What makes the system novel is that it doesn't just evaluate skills; it \emph{learns from its own evaluations} and \emph{learns from its own improvements}, creating two interlocking self-evolving loops.
 
 Over five days, we evaluated 123 skills across 10 batches. The evaluation engine evolved from a basic 7-phase A/B framework (v0.1.0) to a 12-phase self-evolving system (v0.4.0). Each version incorporated lessons from prior batches---failure modes discovered in Batch~3 became pre-flight checks in v0.3.0; improvement patterns proven on 3~skills became the pattern library that v0.4.0 consults before rewriting any skill. The engine also includes an automated skill improvement pipeline with its own knowledge base that tracks which rewrite strategies work and which don't.
 
@@ -100,19 +100,19 @@ Our contributions are:
 \label{sec:related}
 
 \paragraph{Human Preference Arenas.}
-The LMSYS Chatbot Arena \citep{chiang2024chatbot} pioneered crowdsourced pairwise evaluation of language models using Bradley-Terry ranking \citep{bradley1952rank}. Extensions include image generation arenas and multilingual variants. These systems evaluate \emph{model} quality via human preference over text or image outputs. PandaEval differs in evaluating \emph{skill} quality via task success over action-oriented outputs.
+The LMSYS Chatbot Arena \citep{chiang2024chatbot} pioneered crowdsourced pairwise evaluation of language models using Bradley-Terry ranking \citep{bradley1952rank}. Extensions include image generation arenas and multilingual variants. These systems evaluate \emph{model} quality via human preference over text or image outputs. ZooEval differs in evaluating \emph{skill} quality via task success over action-oriented outputs.
 
 \paragraph{Static and Dynamic Benchmarks.}
-MMLU \citep{hendrycks2021mmlu}, HumanEval \citep{chen2021humaneval}, GSM8K \citep{cobbe2021gsm8k}, and MATH \citep{hendrycks2021math} measure isolated model capabilities. LiveBench \citep{white2024livebench} uses refreshed questions to combat contamination. AgentBench \citep{liu2023agentbench} evaluates agents across interactive environments. These benchmarks target the model layer; PandaEval targets the skill layer that sits atop models.
+MMLU \citep{hendrycks2021mmlu}, HumanEval \citep{chen2021humaneval}, GSM8K \citep{cobbe2021gsm8k}, and MATH \citep{hendrycks2021math} measure isolated model capabilities. LiveBench \citep{white2024livebench} uses refreshed questions to combat contamination. AgentBench \citep{liu2023agentbench} evaluates agents across interactive environments. These benchmarks target the model layer; ZooEval targets the skill layer that sits atop models.
 
 \paragraph{Tool-Use Evaluation.}
-ToolBench \citep{qin2023toolllm}, API-Bank \citep{li2023apibank}, T-Eval \citep{chen2023teval}, and TaskBench \citep{shen2023taskbench} evaluate API selection and invocation capabilities. These assess whether a model \emph{can} use tools; PandaEval assesses whether a skill package \emph{improves} how the model uses tools and produces outputs.
+ToolBench \citep{qin2023toolllm}, API-Bank \citep{li2023apibank}, T-Eval \citep{chen2023teval}, and TaskBench \citep{shen2023taskbench} evaluate API selection and invocation capabilities. These assess whether a model \emph{can} use tools; ZooEval assesses whether a skill package \emph{improves} how the model uses tools and produces outputs.
 
 \paragraph{LLM-as-Judge.}
 MT-Bench \citep{zheng2023judging} demonstrated that strong LLMs can serve as reliable judges for open-ended generation quality. We adopt LLM-as-judge for rubric-based quality assessments (Layer~2 grading) while preferring deterministic assertions where possible.
 
 \paragraph{Self-Evolving and Self-Improving Systems.}
-Meta-learning \citep{hospedales2022metalearning} studies how learning systems can learn to learn better. The OpenHands project demonstrated a monitoring loop pattern (log $\rightarrow$ evaluate $\rightarrow$ dashboard $\rightarrow$ feedback $\rightarrow$ improve) for agent skills. Self-play and self-improvement in LLMs \citep{huang2023selfimprove} show that models can improve their own outputs through iterative refinement. PandaEval extends this idea to evaluation methodology itself: the engine doesn't just evaluate skills---it evaluates its own evaluation process and improves it. Uniquely, PandaEval maintains \emph{two} self-evolving loops: one for the evaluation methodology and one for the skill improvement pipeline, each with its own knowledge base and feedback mechanism.
+Meta-learning \citep{hospedales2022metalearning} studies how learning systems can learn to learn better. The OpenHands project demonstrated a monitoring loop pattern (log $\rightarrow$ evaluate $\rightarrow$ dashboard $\rightarrow$ feedback $\rightarrow$ improve) for agent skills. Self-play and self-improvement in LLMs \citep{huang2023selfimprove} show that models can improve their own outputs through iterative refinement. ZooEval extends this idea to evaluation methodology itself: the engine doesn't just evaluate skills---it evaluates its own evaluation process and improves it. Uniquely, ZooEval maintains \emph{two} self-evolving loops: one for the evaluation methodology and one for the skill improvement pipeline, each with its own knowledge base and feedback mechanism.
 
 % ================================================================
 \section{Methodology}
@@ -195,7 +195,7 @@ Scores map to verdicts:
 \section{Self-Evolving Evaluation Engine}
 \label{sec:selfevolve}
 
-The most novel aspect of PandaEval is not the A/B testing protocol---which is straightforward---but the \emph{self-evolving} nature of the system. The engine maintains two independent but interlocking knowledge bases that grow with each evaluation batch and feed back into the engine's own behavior.
+The most novel aspect of ZooEval is not the A/B testing protocol---which is straightforward---but the \emph{self-evolving} nature of the system. The engine maintains two independent but interlocking knowledge bases that grow with each evaluation batch and feed back into the engine's own behavior.
 
 \subsection{The Evaluation Knowledge Base}
 
@@ -569,7 +569,7 @@ Using the same model for both execution and judging creates a potential self-gra
 \draw[arrow, dashed, blue!60] (kb) -| (preflight);
 \draw[arrow, dashed, blue!60] (kb) -- (improve);
 \end{tikzpicture}
-\caption{PandaEval pipeline. Solid arrows show the evaluation flow; dashed arrows show the self-evolution feedback loop from the knowledge base back into pre-flight analysis and skill improvement.}
+\caption{ZooEval pipeline. Solid arrows show the evaluation flow; dashed arrows show the self-evolution feedback loop from the knowledge base back into pre-flight analysis and skill improvement.}
 \label{fig:pipeline}
 \end{figure}
 
@@ -598,7 +598,7 @@ Using the same model for execution and judging introduces potential self-grading
 Each skill was evaluated on 2--3 test cases. This is sufficient to detect major quality signals but may miss edge cases. Skills with many features or use cases are undersampled.
 
 \paragraph{No real-user validation.}
-All evaluations are automated. We have no human validation set confirming that PandaEval scores correlate with real user satisfaction. This is the most important gap.
+All evaluations are automated. We have no human validation set confirming that ZooEval scores correlate with real user satisfaction. This is the most important gap.
 
 \paragraph{Assertion design subjectivity.}
 Test cases and assertions were designed by the evaluation engine (an LLM) based on each skill's \texttt{SKILL.md}. This means the evaluation is partially testing whether the skill's claims are internally consistent, not whether the skill meets external user needs.
@@ -614,7 +614,7 @@ Evaluations reflect a single point in time. Skills and models evolve; scores may
 Deploy the v0.4.0 multi-model pipeline to test each skill across Claude, GPT-4.1, and Gemini, producing a model-skill compatibility matrix.
 
 \paragraph{Human validation set.}
-Recruit a panel of 20--50 ClawHub users to independently rate a subset of 30 skills. Compare human ratings against PandaEval scores to establish ground-truth correlation.
+Recruit a panel of 20--50 ClawHub users to independently rate a subset of 30 skills. Compare human ratings against ZooEval scores to establish ground-truth correlation.
 
 \paragraph{Cost-per-quality analysis.}
 Normalize scores by dollar cost (tokens $\times$ model pricing) to answer: ``Is the quality improvement worth the extra spend?''
@@ -626,26 +626,26 @@ Re-evaluate the full corpus monthly to detect score drift as base models improve
 Test interactions between multiple active skills. Two individually-recommended skills may conflict or produce unexpected behavior when loaded simultaneously.
 
 \paragraph{CI/CD integration.}
-Enable skill authors to run PandaEval as a pre-publish quality gate, similar to running a test suite before merging code.
+Enable skill authors to run ZooEval as a pre-publish quality gate, similar to running a test suite before merging code.
 
 % ================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented PandaEval, a self-evolving evaluation engine for AI agent skills, and applied it to 123 real skills from the ClawHub marketplace. Our core finding---that 76.4\% of skills measurably improve model output---provides the first empirical answer to the question of whether agent skills actually work.
+We presented ZooEval, a self-evolving evaluation engine for AI agent skills, and applied it to 123 real skills from the ClawHub marketplace. Our core finding---that 76.4\% of skills measurably improve model output---provides the first empirical answer to the question of whether agent skills actually work.
 
-But the more significant contribution is the self-evolving architecture itself. Static benchmarks measure a fixed set of capabilities at a point in time; PandaEval accumulates knowledge across evaluation batches and uses it to improve its own methodology. The evaluation engine evolved from 7~phases to 12~phases in five days, with each addition traceable to a specific empirical finding. The improvement engine went from ad hoc rewrites to a pattern library with tracked success rates after a single improvement cycle. Both loops are closed: evaluation knowledge flows back into evaluation methodology, and improvement knowledge flows back into improvement strategy selection.
+But the more significant contribution is the self-evolving architecture itself. Static benchmarks measure a fixed set of capabilities at a point in time; ZooEval accumulates knowledge across evaluation batches and uses it to improve its own methodology. The evaluation engine evolved from 7~phases to 12~phases in five days, with each addition traceable to a specific empirical finding. The improvement engine went from ad hoc rewrites to a pattern library with tracked success rates after a single improvement cycle. Both loops are closed: evaluation knowledge flows back into evaluation methodology, and improvement knowledge flows back into improvement strategy selection.
 
-This dual-loop self-evolution has a practical consequence: \textbf{the longer the system runs, the better it gets at both detecting and fixing skill quality issues}. A static benchmark would have caught the same 8 failure modes in its first pass and never improved. PandaEval discovered phantom tooling in Batch~3, added a pre-flight check in v0.3.0, and caught it systematically in all subsequent batches. The knowledge compounds.
+This dual-loop self-evolution has a practical consequence: \textbf{the longer the system runs, the better it gets at both detecting and fixing skill quality issues}. A static benchmark would have caught the same 8 failure modes in its first pass and never improved. ZooEval discovered phantom tooling in Batch~3, added a pre-flight check in v0.3.0, and caught it systematically in all subsequent batches. The knowledge compounds.
 
 The most actionable finding for skill authors remains concrete: \textbf{skills should be behavioral contracts, not textbooks}. Remove what the model already knows; add MUST/ALWAYS/NEVER rules for what should be different. The improvement pipeline proved this works: removing 60--80\% of content improved all three targeted skills by +1.5--2.0 points.
 
-For the broader agent ecosystem, PandaEval suggests that quality assurance for AI agent skills is tractable and automatable---and that the systems doing the assurance should themselves be designed to learn and improve.
+For the broader agent ecosystem, ZooEval suggests that quality assurance for AI agent skills is tractable and automatable---and that the systems doing the assurance should themselves be designed to learn and improve.
 
 % ================================================================
 \section*{Data Availability}
 
-All evaluation artifacts, skill cards, the interactive leaderboard, and the evaluation engine methodology are publicly available at \url{https://github.com/SerendipityOneInc/PandaEval/}. 
+All evaluation artifacts, skill cards, the interactive leaderboard, and the evaluation engine methodology are publicly available at \url{https://github.com/SerendipityOneInc/ZooEval/}. 
 
 % ================================================================
 % References

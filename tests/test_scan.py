@@ -2,8 +2,8 @@
 
 from unittest.mock import MagicMock, patch
 
-from pandaeval.security import scan_skill
-from pandaeval.security.client import LLMResponse
+from zooeval.security import scan_skill
+from zooeval.security.client import LLMResponse
 
 
 class TestScanSkill:

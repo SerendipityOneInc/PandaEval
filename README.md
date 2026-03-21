@@ -1,13 +1,13 @@
-# PandaEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills
+# ZooEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills
 
-PandaEval is a self-evolving evaluation engine that blind-tests AI agent skills by running each task twice -- with and without the skill -- and grading outputs against deterministic assertions and LLM-as-judge rubrics. It maintains two closed feedback loops: one that sharpens its own evaluation methodology, and one that automatically rewrites underperforming skills. We evaluated **123 skills** from the ClawHub marketplace -- **76.4% measurably improve model output**, and the engine discovered that *removing* 60-80% of a skill's content outperforms adding to it.
+ZooEval is a self-evolving evaluation engine that blind-tests AI agent skills by running each task twice -- with and without the skill -- and grading outputs against deterministic assertions and LLM-as-judge rubrics. It maintains two closed feedback loops: one that sharpens its own evaluation methodology, and one that automatically rewrites underperforming skills. We evaluated **123 skills** from the ClawHub marketplace -- **76.4% measurably improve model output**, and the engine discovered that *removing* 60-80% of a skill's content outperforms adding to it.
 
 <p align="center">
   <a href="#evaluate-your-own-skills">Quick Start</a> &bull;
   <a href="methodology/SKILL-EVAL.md">Methodology</a> &bull;
   <a href="https://zooclaw.ai/eval">Leaderboard</a> &bull;
   <a href="docs/security.md">Security Scan</a> &bull;
-  <a href="paper/PandaEval.pdf">Paper</a> &bull;
+  <a href="paper/ZooEval.pdf">Paper</a> &bull;
   <a href="knowledge/">Knowledge Base</a>
 </p>
 
@@ -46,7 +46,7 @@ PandaEval is a self-evolving evaluation engine that blind-tests AI agent skills 
 
 ## Evaluate Your Own Skills
 
-Clone the repo, then tell [OpenClaw](https://github.com/openclaw/openclaw) or any other AI agent what to evaluate. PandaEval is not a software tool -- it's a **methodology that any AI agent can follow**.
+Clone the repo, then tell [OpenClaw](https://github.com/openclaw/openclaw) or any other AI agent what to evaluate. ZooEval is not a software tool -- it's a **methodology that any AI agent can follow**.
 
 
 
@@ -55,7 +55,7 @@ Just copy and paste the following prompts into your [OpenClaw](https://github.co
 ### Case 1: Evaluate a skill from ClawHub
 
 ```
-Clone https://github.com/SerendipityOneInc/PandaEval.git and read methodology/SKILL-EVAL.md,
+Clone https://github.com/SerendipityOneInc/ZooEval.git and read methodology/SKILL-EVAL.md,
 then evaluate the ClawHub skill "explain-code".
 Download it from ClawHub first, then run the full evaluation.
 ```
@@ -65,7 +65,7 @@ Download it from ClawHub first, then run the full evaluation.
 > Replace the skill path below with your actual skill location before copying.
 
 ```
-Clone https://github.com/SerendipityOneInc/PandaEval.git and read methodology/SKILL-EVAL.md,
+Clone https://github.com/SerendipityOneInc/ZooEval.git and read methodology/SKILL-EVAL.md,
 then evaluate the skill at ~/.agents/skills/my-skill/SKILL.md
 ```
 
@@ -74,7 +74,7 @@ then evaluate the skill at ~/.agents/skills/my-skill/SKILL.md
 > Replace the directory path below with your actual skills folder before copying.
 
 ```
-Clone https://github.com/SerendipityOneInc/PandaEval.git and read methodology/SKILL-EVAL.md,
+Clone https://github.com/SerendipityOneInc/ZooEval.git and read methodology/SKILL-EVAL.md,
 then evaluate all skills under ~/.agents/skills/
 Process them one by one, generate a score card for each, and build a leaderboard.
 ```
@@ -127,7 +127,7 @@ This strategy successfully improved 3/3 tested skills by +1.5 to +2.0 points. Se
 
 ## Methodology
 
-PandaEval uses **blind A/B testing**: every task runs twice on the same model -- once with the skill, once without. Outputs are graded against deterministic assertions (file checks, keyword matching) and LLM-as-judge rubrics.
+ZooEval uses **blind A/B testing**: every task runs twice on the same model -- once with the skill, once without. Outputs are graded against deterministic assertions (file checks, keyword matching) and LLM-as-judge rubrics.
 
 The engine has **two self-evolving loops**:
 - **Evaluation loop**: evaluate → learn → improve methodology → better evaluations
@@ -140,13 +140,13 @@ See [SKILL-EVAL.md](methodology/SKILL-EVAL.md) for the full 12-phase specificati
 ## Repo Structure
 
 ```
-PandaEval/
+ZooEval/
 ├── README.md                        # This file
-├── pandaeval/                       # Core Python package
+├── zooeval/                       # Core Python package
 │   └── security/                    # Security evaluation module (docs/security.md)
 ├── paper/
-│   ├── PandaEval.pdf               # Research paper
-│   └── PandaEval.tex               # LaTeX source
+│   ├── ZooEval.pdf               # Research paper
+│   └── ZooEval.tex               # LaTeX source
 ├── methodology/
 │   ├── SKILL-EVAL.md                # Self-evolving eval engine spec
 │   └── VERSION                      # Engine version
@@ -175,8 +175,8 @@ PandaEval/
 ## Citation
 
 ```bibtex
-@article{wang2026pandaeval,
-  title={PandaEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills},
+@article{wang2026zooeval,
+  title={ZooEval: A Self-Evolving Framework for Evaluating and Improving AI Agent Skills},
   author={Wang, Ji and Li, Xiaopu and Xu, Wenhao and Hu, Ning},
   year={2026},
   institution={Serendipity One Inc.}
@@ -191,4 +191,4 @@ Apache License 2.0 -- see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with [PandaEval](methodology/SKILL-EVAL.md) v0.4.0 | Evaluated on Claude Opus 4 | March 2026*
+*Built with [ZooEval](methodology/SKILL-EVAL.md) v0.4.0 | Evaluated on Claude Opus 4 | March 2026*

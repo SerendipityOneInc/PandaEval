@@ -29,7 +29,7 @@ Informed by:
 ## Architecture
 
 ```
-PandaEval/
+ZooEval/
   README.md                      -- project overview & usage guide
   CITATION.cff                   -- academic citation metadata
   methodology/

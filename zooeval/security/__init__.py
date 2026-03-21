@@ -1,4 +1,4 @@
-"""Security evaluation module for PandaEval.
+"""Security evaluation module for ZooEval.
 
 Four-layer skill security assessment:
   1. Heuristic scan — regex pattern matching for known threat categories
@@ -7,7 +7,7 @@ Four-layer skill security assessment:
   4. Verdict engine — cross-validates all signals
 
 Usage:
-    from pandaeval.security import scan_skill
+    from zooeval.security import scan_skill
     result = scan_skill("/path/to/skill-dir")
     print(result["verdict"])       # "safe" | "caution" | "unsafe"
     print(result["security_score"])  # 0-10

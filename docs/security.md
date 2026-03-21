@@ -1,6 +1,6 @@
 # Security Evaluation Module
 
-`pandaeval.security` provides automated security assessment for AI agent skills. It scans skill directories for threats using a four-layer pipeline and produces a verdict with a 0-10 score.
+`zooeval.security` provides automated security assessment for AI agent skills. It scans skill directories for threats using a four-layer pipeline and produces a verdict with a 0-10 score.
 
 ## Architecture
 
@@ -19,7 +19,7 @@ Neither layer alone determines the outcome — the verdict engine requires corro
 ## Quick Start
 
 ```python
-from pandaeval.security import scan_skill
+from zooeval.security import scan_skill
 
 result = scan_skill("/path/to/skill-dir")
 
@@ -161,8 +161,8 @@ result = scan_skill("/path/to/skill")
 ## Using a Custom LLM Client
 
 ```python
-from pandaeval.security import scan_skill
-from pandaeval.security.client import LLMClient
+from zooeval.security import scan_skill
+from zooeval.security.client import LLMClient
 
 client = LLMClient(
     provider="openai",
