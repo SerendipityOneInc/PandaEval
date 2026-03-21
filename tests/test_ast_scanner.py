@@ -1,6 +1,6 @@
 """Tests for security.ast_scanner module."""
 
-from pandaeval.security.ast_scanner import scan_python_file, ast_scan
+from zooeval.security.ast_scanner import scan_python_file, ast_scan
 
 
 class TestScanPythonFile:

@@ -1,6 +1,6 @@
 """Tests for security.heuristic module."""
 
-from pandaeval.security.heuristic import heuristic_scan, _read_all_files, THREAT_PATTERNS
+from zooeval.security.heuristic import heuristic_scan, _read_all_files, THREAT_PATTERNS
 
 
 class TestReadAllContent:

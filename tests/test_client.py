@@ -3,7 +3,7 @@
 import json
 from unittest.mock import patch, MagicMock
 
-from pandaeval.security.client import LLMResponse, LLMClient, _detect_provider, _http_post
+from zooeval.security.client import LLMResponse, LLMClient, _detect_provider, _http_post
 
 
 class TestLLMResponse:
@@ -121,7 +121,7 @@ class TestLLMClientCallAnthropic:
             "model": "claude-test",
             "usage": {"input_tokens": 10, "output_tokens": 5},
         })
-        with patch("pandaeval.security.client._http_post", return_value=(True, mock_resp)):
+        with patch("zooeval.security.client._http_post", return_value=(True, mock_resp)):
             resp = client._call_anthropic("hi", 100)
             assert resp.ok
             assert resp.text == "Hello!"
@@ -130,7 +130,7 @@ class TestLLMClientCallAnthropic:
 
     def test_handles_http_error(self):
         client = LLMClient("anthropic", "claude-test", "key")
-        with patch("pandaeval.security.client._http_post", return_value=(False, "HTTP 401: Unauthorized")):
+        with patch("zooeval.security.client._http_post", return_value=(False, "HTTP 401: Unauthorized")):
             resp = client._call_anthropic("hi", 100)
             assert not resp.ok
             assert "401" in resp.error
@@ -144,7 +144,7 @@ class TestLLMClientCallOpenAI:
             "model": "gpt-test",
             "usage": {"prompt_tokens": 8, "completion_tokens": 3},
         })
-        with patch("pandaeval.security.client._http_post", return_value=(True, mock_resp)):
+        with patch("zooeval.security.client._http_post", return_value=(True, mock_resp)):
             resp = client._call_openai("hi", 100)
             assert resp.ok
             assert resp.text == "World!"
@@ -153,7 +153,7 @@ class TestLLMClientCallOpenAI:
 
     def test_handles_http_error(self):
         client = LLMClient("openai", "gpt-test", "key", base_url="https://api.openai.com/v1")
-        with patch("pandaeval.security.client._http_post", return_value=(False, "HTTP 500: error")):
+        with patch("zooeval.security.client._http_post", return_value=(False, "HTTP 500: error")):
             resp = client._call_openai("hi", 100)
             assert not resp.ok
             assert "500" in resp.error

@@ -1,4 +1,4 @@
-// PandaEval Dashboard v4
+// ZooEval Dashboard v4
 (function () {
     // ─── Theme ───
     const themeToggle = document.getElementById('theme-toggle');
@@ -13,7 +13,7 @@
     }
 
     // Init: use saved preference, or follow system
-    const saved = localStorage.getItem('panda-theme');
+    const saved = localStorage.getItem('zoo-theme');
     if (saved) {
         applyTheme(saved);
     } else {
@@ -22,7 +22,7 @@
 
     // Listen for system changes (only if user hasn't manually overridden)
     window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('panda-theme')) {
+        if (!localStorage.getItem('zoo-theme')) {
             applyTheme(e.matches ? 'light' : 'dark');
         }
     });
@@ -33,7 +33,7 @@
             const current = root.getAttribute('data-theme') || 'dark';
             const next = current === 'dark' ? 'light' : 'dark';
             applyTheme(next);
-            localStorage.setItem('panda-theme', next);
+            localStorage.setItem('zoo-theme', next);
         });
     }
 

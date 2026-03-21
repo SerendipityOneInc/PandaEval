@@ -1,6 +1,6 @@
 """Tests for security.verdict module."""
 
-from pandaeval.security.verdict import determine_verdict, _compute_heuristic_score, _compute_intent_score
+from zooeval.security.verdict import determine_verdict, _compute_heuristic_score, _compute_intent_score
 
 
 def _heuristic(score=10, findings=None, notes=None):

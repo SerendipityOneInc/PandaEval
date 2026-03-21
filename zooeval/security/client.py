@@ -61,7 +61,7 @@ def _detect_provider(model):
 
 def _http_post(url, headers, body, timeout):
     data = json.dumps(body).encode("utf-8")
-    headers.setdefault("User-Agent", "pandaeval-security/1.0")
+    headers.setdefault("User-Agent", "zooeval-security/1.0")
     req = urllib.request.Request(url, data=data, headers=headers, method="POST")
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:

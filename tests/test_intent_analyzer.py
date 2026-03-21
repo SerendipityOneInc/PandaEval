@@ -2,8 +2,8 @@
 
 from unittest.mock import patch, MagicMock
 
-from pandaeval.security.intent_analyzer import _parse_response, _read_skill_content, analyze_intent
-from pandaeval.security.client import LLMResponse
+from zooeval.security.intent_analyzer import _parse_response, _read_skill_content, analyze_intent
+from zooeval.security.client import LLMResponse
 
 
 class TestParseResponse:
