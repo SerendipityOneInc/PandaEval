@@ -123,9 +123,181 @@ select {
 .container {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px 56px;
+    padding: 96px 24px 56px;
     position: relative;
     z-index: 1;
+}
+
+.zc-header {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 24px);
+    max-width: 1576px;
+    height: 56px;
+    background: rgba(10, 10, 15, 0.7);
+    border: 1px solid transparent;
+    border-radius: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.zc-header-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 61px;
+    gap: 32px;
+}
+
+.zc-header-logo,
+.zc-header-actions {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.zc-header-logo a {
+    display: inline-flex;
+    align-items: center;
+}
+
+.zc-header-logo img {
+    display: block;
+    height: 24px;
+    width: auto;
+}
+
+.zc-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    font-size: 13.5px;
+    color: var(--text-0);
+}
+
+.zc-header-nav > a,
+.zc-nav-dropdown > a {
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+.zc-header-nav > a:hover,
+.zc-nav-dropdown > a:hover {
+    opacity: 0.7;
+}
+
+.zc-nav-dropdown {
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: -16px;
+}
+
+.zc-nav-dropdown > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.zc-nav-dropdown > a::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-top: 1px;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+    border-top: 4px solid currentColor;
+    opacity: 0.5;
+}
+
+.zc-nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    display: none;
+    min-width: 220px;
+    padding: 4px 0 0;
+    list-style: none;
+    transform: translateX(-50%);
+}
+
+.zc-nav-dropdown:hover .zc-nav-dropdown-menu,
+.zc-nav-dropdown:focus-within .zc-nav-dropdown-menu {
+    display: block;
+}
+
+.zc-nav-dropdown-menu {
+    background: rgba(20, 20, 28, 0.96);
+    border: 1px solid rgba(245, 244, 239, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.zc-nav-dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.zc-nav-dropdown-menu a:hover {
+    background: rgba(245, 244, 239, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+}
+
+.zc-header-actions {
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.zc-btn-signin,
+.zc-btn-signup {
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.zc-btn-signin {
+    font-size: 14px;
+    color: rgba(245, 244, 239, 0.5);
+    transition: color 0.2s ease;
+}
+
+.zc-btn-signin:hover {
+    color: rgba(245, 244, 239, 0.8);
+}
+
+.zc-btn-signup {
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: #f5f4ef;
+    color: #100f09;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.zc-btn-signup:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.zc-btn-signup:active {
+    transform: scale(0.97);
 }
 
 .ambient-glow {
@@ -1032,13 +1204,13 @@ select {
 
 .detail-page {
     max-width: 1040px;
-    padding-top: 20px;
+    padding-top: 96px;
 }
 
 .detail-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 16px;
     margin-bottom: 24px;
 }
@@ -1414,6 +1586,15 @@ body,
 }
 
 @media (max-width: 1080px) {
+    .zc-header-inner {
+        padding: 0 28px;
+        gap: 24px;
+    }
+
+    .zc-header-nav {
+        gap: 32px;
+    }
+
     .hero-stats {
         grid-template-columns: 1fr;
     }
@@ -1425,7 +1606,43 @@ body,
 
 @media (max-width: 820px) {
     .container {
-        padding: 0 16px 44px;
+        padding: 110px 16px 44px;
+    }
+
+    .detail-page {
+        padding-top: 110px;
+    }
+
+    .zc-header {
+        height: auto;
+    }
+
+    .zc-header-inner {
+        flex-wrap: wrap;
+        padding: 14px 18px 12px;
+        gap: 14px 18px;
+    }
+
+    .zc-header-logo,
+    .zc-header-actions {
+        flex: 0 0 auto;
+    }
+
+    .zc-header-nav {
+        order: 3;
+        width: 100%;
+        gap: 20px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .zc-header-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .zc-header-actions {
+        margin-left: auto;
+        gap: 12px;
     }
 
     .header {
@@ -1483,6 +1700,37 @@ body,
 }
 
 @media (max-width: 560px) {
+    .zc-header {
+        top: 0;
+        width: 100%;
+        max-width: none;
+        border: none;
+        border-bottom: 1px solid rgba(245, 244, 239, 0.08);
+        background: rgba(10, 10, 15, 0.96);
+    }
+
+    .zc-header-inner {
+        padding: 14px 16px 12px;
+    }
+
+    .zc-header-logo img {
+        height: 22px;
+    }
+
+    .zc-header-nav {
+        gap: 18px;
+        font-size: 12.5px;
+    }
+
+    .zc-btn-signin {
+        font-size: 13px;
+    }
+
+    .zc-btn-signup {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
     .intro-headline {
         font-size: 2.35rem;
     }

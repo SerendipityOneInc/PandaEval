@@ -148,6 +148,10 @@ FLAG_LABELS = {
     "dependency-gated": "requires-credentials",
 }
 
+ZOOCLAW_LOGO_URL = "https://assets.yesy.site/f/images/2026/03/sj2xdnzz.svg"
+ZOOCLAW_SIGNIN_URL = "https://zooclaw.ai/en/chat"
+ZOOCLAW_SIGNUP_URL = "https://zooclaw.ai/en/chat"
+
 PANDA_MARK_SVG = """
 <svg viewBox="0 20 110 111" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
     <path d="M3.04688 40.9362C3.04688 40.9362 7.92828 43.6323 12.4481 44.153C19.4295 44.9572 31.3572 39.0206 42.8334 40.3732C49.0215 41.1026 48.7041 45.813 56.3996 47.4502C61.7942 48.5979 64.8885 57.7439 59.9697 63.132C58.3037 58.9502 56.5121 57.2614 52.1949 57.2614C37.6093 57.2614 13.242 94.0895 3.04688 104.273V130.739H107.272V98.8398C107.272 98.8398 93.9259 98.7265 85.2498 100.448C76.4912 102.186 74.726 103.261 63.5398 107.685C61.0686 108.662 55.0693 110.741 54.0989 107.202C52.93 102.94 59.2698 100.158 59.9697 98.758C59.2557 92.6461 60.4159 86.7043 67.3479 79.216C74.2798 71.7277 89.739 58.9502 107.272 48.7109V20.428H3.04688L3.04688 40.9362Z" fill="currentColor"/>
@@ -168,6 +172,36 @@ def build_brand_logo(href: str, detail: bool = False) -> str:
             <span class="logo-tag">Skill Audit Index</span>
         </span>
     </a>'''
+
+
+def build_zooclaw_header() -> str:
+    return f'''<header class="zc-header">
+    <div class="zc-header-inner">
+        <div class="zc-header-logo">
+            <a href="https://zooclaw.ai/en" aria-label="ZooClaw home">
+                <img src="{ZOOCLAW_LOGO_URL}" alt="ZooClaw">
+            </a>
+        </div>
+        <nav class="zc-header-nav" aria-label="ZooClaw site">
+            <a href="https://zooclaw.ai/en">Home</a>
+            <a href="https://zooclaw.ai/en#why-zooclaw">Feature</a>
+            <a href="https://zooclaw.ai/pricing">Pricing</a>
+            <div class="zc-nav-dropdown">
+                <a href="#">Resources</a>
+                <ul class="zc-nav-dropdown-menu">
+                    <li><a href="https://pandaclaw-100-stories.vercel.app/" target="_blank" rel="noopener noreferrer">Use Cases</a></li>
+                    <li><a href="https://zooclaw.ai/eval/" target="_blank" rel="noopener noreferrer">ZooEval</a></li>
+                    <li><a href="https://zooclaw.ai/help/" target="_blank" rel="noopener noreferrer">Help My Claw</a></li>
+                    <li><a href="https://starquest.feishu.cn/share/base/form/shrcnGUFH9kq2wMt25vE3eXS07c?from=landingpage" target="_blank" rel="noopener noreferrer">Specialist Creator Program</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="zc-header-actions">
+            <a href="{ZOOCLAW_SIGNIN_URL}" class="zc-btn-signin">Sign in</a>
+            <a href="{ZOOCLAW_SIGNUP_URL}" class="zc-btn-signup">Sign up</a>
+        </div>
+    </div>
+</header>'''
 
 
 def sc_class(score: float) -> str:
@@ -413,7 +447,7 @@ def build_detail_html(skill: dict) -> str:
 
     sc_colors = {"high": "var(--green)", "mid": "var(--yellow)", "low": "var(--red)", "bad": "var(--red)"}
     sc_bgs = {"high": "var(--green-dim)", "mid": "var(--yellow-dim)", "low": "var(--red-dim)", "bad": "var(--red-dim)"}
-    brand_html = build_brand_logo("../index.html", detail=True)
+    nav_html = build_zooclaw_header()
 
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -424,9 +458,9 @@ def build_detail_html(skill: dict) -> str:
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+{nav_html}
 <div class="container detail-page">
     <div class="detail-nav">
-        {brand_html}
         <a href="../index.html" class="back-btn">&larr; Back to ZooEval</a>
     </div>
 
@@ -490,7 +524,7 @@ def build_index_html(skills, domains, verdicts):
     dist_html = build_score_distribution(skills)
 
     cards_html = "\n".join(build_card_html(s) for s in skills)
-    brand_html = build_brand_logo("index.html")
+    nav_html = build_zooclaw_header()
 
     domain_pills = '<button class="domain-pill active" data-filter="all" data-group="domain">All</button>'
     for d in sorted(domains):
@@ -514,18 +548,10 @@ def build_index_html(skills, domains, verdicts):
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+{nav_html}
 <div class="container">
 
     <div class="ambient-glow"></div>
-
-    <div class="header">
-        {brand_html}
-        <div class="header-meta" aria-label="site summary">
-            <span>skill-eval</span>
-            <span>{total} skills</span>
-            <span>{n_domains} domains</span>
-        </div>
-    </div>
 
     <section class="intro">
         <p class="intro-kicker">Blind tests. Real signal.</p>
