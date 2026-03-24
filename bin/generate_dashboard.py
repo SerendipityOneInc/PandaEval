@@ -148,9 +148,26 @@ FLAG_LABELS = {
     "dependency-gated": "requires-credentials",
 }
 
+PANDA_MARK_SVG = """
+<svg viewBox="0 20 110 111" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <path d="M3.04688 40.9362C3.04688 40.9362 7.92828 43.6323 12.4481 44.153C19.4295 44.9572 31.3572 39.0206 42.8334 40.3732C49.0215 41.1026 48.7041 45.813 56.3996 47.4502C61.7942 48.5979 64.8885 57.7439 59.9697 63.132C58.3037 58.9502 56.5121 57.2614 52.1949 57.2614C37.6093 57.2614 13.242 94.0895 3.04688 104.273V130.739H107.272V98.8398C107.272 98.8398 93.9259 98.7265 85.2498 100.448C76.4912 102.186 74.726 103.261 63.5398 107.685C61.0686 108.662 55.0693 110.741 54.0989 107.202C52.93 102.94 59.2698 100.158 59.9697 98.758C59.2557 92.6461 60.4159 86.7043 67.3479 79.216C74.2798 71.7277 89.739 58.9502 107.272 48.7109V20.428H3.04688L3.04688 40.9362Z" fill="currentColor"/>
+</svg>
+"""
+
 
 def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def build_brand_logo(href: str, detail: bool = False) -> str:
+    detail_cls = " logo--detail" if detail else ""
+    return f'''<a href="{href}" class="logo{detail_cls}" aria-label="ZooEval home">
+        <span class="logo-mark">{PANDA_MARK_SVG}</span>
+        <span class="logo-copy">
+            <span class="logo-text">Zoo<span>Eval</span></span>
+            <span class="logo-tag">Skill Audit Index</span>
+        </span>
+    </a>'''
 
 
 def sc_class(score: float) -> str:
@@ -396,6 +413,7 @@ def build_detail_html(skill: dict) -> str:
 
     sc_colors = {"high": "var(--green)", "mid": "var(--yellow)", "low": "var(--red)", "bad": "var(--red)"}
     sc_bgs = {"high": "var(--green-dim)", "mid": "var(--yellow-dim)", "low": "var(--red-dim)", "bad": "var(--red-dim)"}
+    brand_html = build_brand_logo("../index.html", detail=True)
 
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -407,11 +425,10 @@ def build_detail_html(skill: dict) -> str:
 </head>
 <body>
 <div class="container detail-page">
-    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-    <a href="../index.html" class="back-btn">&larr; Back</a>
+    <div class="detail-nav">
+        {brand_html}
+        <a href="../index.html" class="back-btn">&larr; Back to ZooEval</a>
+    </div>
 
     <div class="detail-header">
         <div class="detail-top">
@@ -473,6 +490,7 @@ def build_index_html(skills, domains, verdicts):
     dist_html = build_score_distribution(skills)
 
     cards_html = "\n".join(build_card_html(s) for s in skills)
+    brand_html = build_brand_logo("index.html")
 
     domain_pills = '<button class="domain-pill active" data-filter="all" data-group="domain">All</button>'
     for d in sorted(domains):
@@ -500,20 +518,17 @@ def build_index_html(skills, domains, verdicts):
 
     <div class="ambient-glow"></div>
 
-    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-
     <div class="header">
-        <div class="logo">
-            <span class="logo-icon">&#x1f43c;</span>
-            <span class="logo-text">ZooEval</span>
+        {brand_html}
+        <div class="header-meta" aria-label="site summary">
+            <span>skill-eval</span>
+            <span>{total} skills</span>
+            <span>{n_domains} domains</span>
         </div>
-        <span class="header-meta">skill-eval &middot; {total} skills &middot; {n_domains} domains</span>
     </div>
 
     <section class="intro">
+        <p class="intro-kicker">Blind tests. Real signal.</p>
         <h1 class="intro-headline">A <span class="intro-gradient">Self-Evolving</span> Framework for<br>Evaluating AI Agent Skills</h1>
         <p class="intro-sub">
             ZooEval is a <strong>self-evolving</strong> evaluation engine that blind-tests AI agent skills by running each task
