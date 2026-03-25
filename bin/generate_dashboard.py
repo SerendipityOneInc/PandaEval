@@ -395,6 +395,24 @@ def build_card_html(skill: dict) -> str:
 </div>'''
 
 
+# ─── ZooClaw Promo Snippets ───
+
+PROMO_FOOTER = '''\
+    <div class="zc-promo-footer">
+        <div class="zc-promo-footer-title">Powered by ZooClaw</div>
+        <p class="zc-promo-footer-body">
+            Not another AI assistant \u2014 <strong>your personal team of AI specialists</strong>.
+            One entry point, multiple specialists. Each equipped with built-in skills,
+            domain knowledge, and the tools to get work done from day one.<br><br>
+            No setup. No API keys. No token anxiety. Just results.
+        </p>
+        <a href="https://zooclaw.ai/en" class="zc-promo-footer-cta" target="_blank" rel="noopener noreferrer">
+            Get started for free
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+    </div>'''
+
+
 # ─── Detail HTML ───
 
 def build_detail_html(skill: dict) -> str:
@@ -502,6 +520,8 @@ def build_detail_html(skill: dict) -> str:
         <a href="{source_url}" class="source-link" target="_blank">{source_url}</a>
         <p class="eval-engine">{eval_engine}</p>
     </section>
+
+{PROMO_FOOTER}
 </div>
 <script src="../app.js"></script>
 </body>
@@ -689,6 +709,8 @@ def build_index_html(skills, domains, verdicts):
     <div class="cards-grid" id="cards-container">
 {cards_html}
     </div>
+
+{PROMO_FOOTER}
 
     <footer class="footer">
         ZooEval &middot; {total} skill evaluations &middot; {n_domains} domains
