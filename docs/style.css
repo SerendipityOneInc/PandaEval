@@ -265,23 +265,9 @@ select {
     gap: 20px;
 }
 
-.zc-btn-signin,
-.zc-btn-signup {
+.zc-btn-goto {
     text-decoration: none;
     white-space: nowrap;
-}
-
-.zc-btn-signin {
-    font-size: 14px;
-    color: rgba(245, 244, 239, 0.5);
-    transition: color 0.2s ease;
-}
-
-.zc-btn-signin:hover {
-    color: rgba(245, 244, 239, 0.8);
-}
-
-.zc-btn-signup {
     padding: 9px 20px;
     border-radius: 999px;
     background: #f5f4ef;
@@ -291,12 +277,12 @@ select {
     transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
 }
 
-.zc-btn-signup:hover {
+.zc-btn-goto:hover {
     opacity: 0.88;
     transform: translateY(-1px);
 }
 
-.zc-btn-signup:active {
+.zc-btn-goto:active {
     transform: scale(0.97);
 }
 
@@ -1813,11 +1799,7 @@ body,
         font-size: 12.5px;
     }
 
-    .zc-btn-signin {
-        font-size: 13px;
-    }
-
-    .zc-btn-signup {
+    .zc-btn-goto {
         padding: 8px 16px;
         font-size: 13px;
     }

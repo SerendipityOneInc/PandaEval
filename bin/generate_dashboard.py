@@ -149,8 +149,6 @@ FLAG_LABELS = {
 }
 
 ZOOCLAW_LOGO_URL = "https://assets.yesy.site/f/images/2026/03/sj2xdnzz.svg"
-ZOOCLAW_SIGNIN_URL = "https://zooclaw.ai/en/chat"
-ZOOCLAW_SIGNUP_URL = "https://zooclaw.ai/en/chat"
 SITE_BASE_URL = "https://zooclaw.ai/eval"
 
 ZOO_MARK_SVG = """
@@ -190,16 +188,15 @@ def build_zooclaw_header() -> str:
             <div class="zc-nav-dropdown">
                 <a href="#">Resources</a>
                 <ul class="zc-nav-dropdown-menu">
-
+                    <li><a href="https://blog.zooclaw.ai/" target="_blank" rel="noopener noreferrer">Blog</a></li>
                     <li><a href="https://zooclaw.ai/eval/" target="_blank" rel="noopener noreferrer">ZooEval</a></li>
-                    <li><a href="https://zooclaw.ai/help/" target="_blank" rel="noopener noreferrer">Help My Claw</a></li>
+                    <li><a href="https://zooclaw.ai/help/en/" target="_blank" rel="noopener noreferrer">Help My Claw</a></li>
                     <li><a href="https://starquest.feishu.cn/share/base/form/shrcnGUFH9kq2wMt25vE3eXS07c?from=landingpage" target="_blank" rel="noopener noreferrer">Specialist Creator Program</a></li>
                 </ul>
             </div>
         </nav>
         <div class="zc-header-actions">
-            <a href="{ZOOCLAW_SIGNIN_URL}" class="zc-btn-signin">Sign in</a>
-            <a href="{ZOOCLAW_SIGNUP_URL}" class="zc-btn-signup">Sign up</a>
+            <a href="https://zooclaw.ai/en" class="zc-btn-goto">Go to ZooClaw &rarr;</a>
         </div>
     </div>
 </header>'''
