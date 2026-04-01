@@ -124,7 +124,7 @@ def parse_skill_card(filepath: str) -> dict | None:
         key = m.group(1).strip()
         val = m.group(2).strip()
         if key in ("Word Count", "Line Count", "Files in Package"):
-            metrics[key.lower().replace(" ", "_")] = int(val)
+            metrics[key.lower().replace(" ", "_")] = int(val.replace(",", ""))
         elif key in ("Has Scripts", "Has References"):
             metrics[key.lower().replace(" ", "_")] = val.lower() == "yes"
     if metrics:
@@ -149,8 +149,9 @@ FLAG_LABELS = {
 }
 
 ZOOCLAW_LOGO_URL = "https://assets.yesy.site/f/images/2026/03/sj2xdnzz.svg"
+SITE_BASE_URL = "https://zooclaw.ai/eval"
 
-PANDA_MARK_SVG = """
+ZOO_MARK_SVG = """
 <svg viewBox="0 20 110 111" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
     <path d="M3.04688 40.9362C3.04688 40.9362 7.92828 43.6323 12.4481 44.153C19.4295 44.9572 31.3572 39.0206 42.8334 40.3732C49.0215 41.1026 48.7041 45.813 56.3996 47.4502C61.7942 48.5979 64.8885 57.7439 59.9697 63.132C58.3037 58.9502 56.5121 57.2614 52.1949 57.2614C37.6093 57.2614 13.242 94.0895 3.04688 104.273V130.739H107.272V98.8398C107.272 98.8398 93.9259 98.7265 85.2498 100.448C76.4912 102.186 74.726 103.261 63.5398 107.685C61.0686 108.662 55.0693 110.741 54.0989 107.202C52.93 102.94 59.2698 100.158 59.9697 98.758C59.2557 92.6461 60.4159 86.7043 67.3479 79.216C74.2798 71.7277 89.739 58.9502 107.272 48.7109V20.428H3.04688L3.04688 40.9362Z" fill="currentColor"/>
 </svg>
@@ -164,7 +165,7 @@ def esc(s: str) -> str:
 def build_brand_logo(href: str, detail: bool = False) -> str:
     detail_cls = " logo--detail" if detail else ""
     return f'''<a href="{href}" class="logo{detail_cls}" aria-label="ZooEval home">
-        <span class="logo-mark">{PANDA_MARK_SVG}</span>
+        <span class="logo-mark">{ZOO_MARK_SVG}</span>
         <span class="logo-copy">
             <span class="logo-text">Zoo<span>Eval</span></span>
             <span class="logo-tag">Skill Audit Index</span>
@@ -464,12 +465,50 @@ def build_detail_html(skill: dict) -> str:
     sc_bgs = {"high": "var(--green-dim)", "mid": "var(--yellow-dim)", "low": "var(--red-dim)", "bad": "var(--red-dim)"}
     nav_html = build_zooclaw_header()
 
+    slug = slug_for(s)
+    page_url = f"{SITE_BASE_URL}/detail/{slug}.html"
+    meta_desc = f"{name} scored {score}/10 in ZooEval blind evaluation. Category: {domain}. Verdict: {verdict}."
+    if desc:
+        meta_desc += f" {desc}"
+    if len(meta_desc) > 160:
+        meta_desc = meta_desc[:157] + "..."
+
+    jsonld = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": s["name"],
+        "applicationCategory": s.get("domain", ""),
+        "description": s.get("description", ""),
+        "review": {
+            "@type": "Review",
+            "author": {"@type": "Organization", "name": "ZooEval"},
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": score,
+                "bestRating": 10,
+                "worstRating": 0,
+            },
+            "reviewBody": f"Verdict: {verdict}",
+        },
+    }, ensure_ascii=False)
+
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{name} — ZooEval</title>
+<title>{name} Evaluation ({score}/10) — ZooEval</title>
+<meta name="description" content="{esc(meta_desc)}">
+<link rel="canonical" href="{page_url}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{name} — ZooEval Skill Evaluation">
+<meta property="og:description" content="{esc(meta_desc)}">
+<meta property="og:url" content="{page_url}">
+<meta property="og:site_name" content="ZooEval">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{name} — ZooEval Skill Evaluation">
+<meta name="twitter:description" content="{esc(meta_desc)}">
+<script type="application/ld+json">{jsonld}</script>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -514,7 +553,7 @@ def build_detail_html(skill: dict) -> str:
 
     <section class="detail-section">
         <h2 class="section-title">Source</h2>
-        <a href="{source_url}" class="source-link" target="_blank">{source_url}</a>
+        <a href="{source_url}" class="source-link" target="_blank" rel="nofollow noopener">{source_url}</a>
         <p class="eval-engine">{eval_engine}</p>
     </section>
 
@@ -556,12 +595,27 @@ def build_index_html(skills, domains, verdicts):
     ]:
         verdict_pills += f'<button class="pill" data-filter="{vc}" data-group="verdict"><span class="pill-dot" style="background:{color}"></span>{label}</button>'
 
+    index_desc = (
+        f"ZooEval blind-tests {total} AI agent skills across {n_domains} domains. "
+        f"Average score: {avg:.1f}/10. Browse evaluations with quality, efficiency, and value-add breakdowns."
+    )
+
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZooEval — A Self-Evolving Framework for Evaluating AI Agent Skills</title>
+<meta name="description" content="{esc(index_desc)}">
+<link rel="canonical" href="{SITE_BASE_URL}/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ZooEval — AI Agent Skill Evaluations">
+<meta property="og:description" content="{esc(index_desc)}">
+<meta property="og:url" content="{SITE_BASE_URL}/">
+<meta property="og:site_name" content="ZooEval">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooEval — AI Agent Skill Evaluations">
+<meta name="twitter:description" content="{esc(index_desc)}">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -757,6 +811,35 @@ def main():
         slug = slug_for(s)
         detail_html = build_detail_html(s)
         (DOCS_DIR / "detail" / f"{slug}.html").write_text(detail_html, encoding="utf-8")
+
+    # ─── Generate sitemap.xml ───
+    from datetime import date
+    today = date.today().isoformat()
+    sitemap_urls = f'''  <url>
+    <loc>{SITE_BASE_URL}/</loc>
+    <lastmod>{today}</lastmod>
+    <priority>1.0</priority>
+  </url>\n'''
+    for s in skills:
+        slug = slug_for(s)
+        sitemap_urls += f'''  <url>
+    <loc>{SITE_BASE_URL}/detail/{slug}.html</loc>
+    <lastmod>{s.get("eval_date", today)}</lastmod>
+    <priority>0.6</priority>
+  </url>\n'''
+    sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{sitemap_urls}</urlset>
+'''
+    (DOCS_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+
+    # ─── Generate robots.txt ───
+    robots_txt = f"""User-agent: *
+Allow: /
+
+Sitemap: {SITE_BASE_URL}/sitemap.xml
+"""
+    (DOCS_DIR / "robots.txt").write_text(robots_txt, encoding="utf-8")
 
     print(f"Generated dashboard: {len(skills)} skills, {skipped} skipped, {len(domains)} domains")
     print(f"Output: {DOCS_DIR}")
